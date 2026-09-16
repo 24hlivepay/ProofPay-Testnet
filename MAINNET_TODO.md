@@ -227,15 +227,21 @@ fallback addresses in `escrowAssets.js` are ever rotated:
       toggle's page reload picks the right one at runtime).
       `VITE_CIRCLE_APP_ID` (no suffix) still works as a fallback for
       testnet only, so the existing Vercel config isn't broken by this.
-- [ ] Still open: set these two in Vercel's frontend env —
-      `VITE_CIRCLE_APP_ID_TESTNET` (same value as the current
-      `VITE_CIRCLE_APP_ID`, or leave that var as-is and skip this one) and
-      `VITE_CIRCLE_APP_ID_MAINNET` (the Mainnet App ID) — and this one in
-      the backend env: `CIRCLE_API_KEY_MAINNET` (the new Mainnet API key,
-      **not** the existing `CIRCLE_API_KEY`, which stays pointed at
-      testnet). Until these are set, mainnet Circle-wallet calls fail
-      cleanly at Circle's end (empty/wrong key) even though all the
-      app-side wiring is done.
+- [x] **Done 2026-09-17.** Vercel's `proof-pay` project (proofpay.online)
+      was still Git-connected to the old `ProofPay-Testnet` repo — switched
+      it to `ProofPay-Mainnet` under Settings → Git (had to grant the
+      Vercel GitHub App access to the new repo first, under
+      github.com/settings/installations, since it was scoped to selected
+      repos). Connecting a repo doesn't retroactively deploy its history,
+      so an empty commit was pushed to trigger the first real build.
+      `CIRCLE_API_KEY_MAINNET` (Secret) and `VITE_CIRCLE_APP_ID_MAINNET`
+      (Config — Vercel rejects `VITE_`-prefixed vars as Secret since
+      they're public in the client bundle anyway) are both set in
+      Production. One more empty commit pushed to rebuild with them
+      included, since adding an env var doesn't touch existing builds.
+      **Note:** the Mainnet API key was briefly visible in a screenshot
+      during setup — it was revoked and regenerated before being saved to
+      Vercel, so the exposed value was never actually put into use.
 
 ## 6. Decide: one app for both networks, or separate deployments? — RESOLVED
 
