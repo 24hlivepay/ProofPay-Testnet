@@ -3,6 +3,37 @@
 Arc mainnet went live **September 16, 2026**. Step 1 details are now
 published — see below. Everything after step 1 still needs doing.
 
+## ⏸️ Where we left off (2026-09-17, end of session)
+
+Everything below is done: contracts deployed and verified, frontend +
+backend wired for both networks, Circle Console configured (billing,
+Email/SMTP, keys), Vercel repointed to `ProofPay-Mainnet` with the mainnet
+env vars set, and a rebuild triggered.
+
+**First thing to do tomorrow: verify the live site actually works.**
+Nothing below has been confirmed against the real, deployed
+proofpay.online yet — the last redeploy was only just triggered.
+
+- [ ] Open proofpay.online, confirm the build succeeded (check Vercel
+      Deployments tab for "Ready", not "Error")
+- [ ] Confirm the navbar network badge shows correctly and defaults to
+      Arc Mainnet
+- [ ] Try a real Circle email sign-up on mainnet — this is the part that
+      depends on today's last fixes (`CIRCLE_API_KEY_MAINNET`,
+      `VITE_CIRCLE_APP_ID_MAINNET`) actually working end to end
+- [ ] Click the navbar toggle, confirm testnet still works exactly as
+      before (nothing regressed)
+- [ ] If a real MetaMask/Rabby test escrow is worth doing on mainnet with
+      a small real amount, that's the strongest possible confirmation —
+      optional, real money, only if you want that level of certainty
+
+Still open after that (not urgent, no deadline):
+- Independent smart-contract security audit (see step 3 — self-review
+  found 2 HIGH findings, still needs a real audit)
+- Circle Wallets API's `blockchain: "ARC"` value works per docs, but has
+  not yet been exercised by an actual successful mainnet wallet creation —
+  worth confirming once the live-site check above is done
+
 ## 1. Get official mainnet details from Circle docs
 
 - [x] Arc mainnet RPC URL: `https://rpc.mainnet.arc.io` (Circle primary;
