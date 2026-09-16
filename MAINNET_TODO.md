@@ -201,11 +201,41 @@ fallback addresses in `escrowAssets.js` are ever rotated:
       the same OTP subject line. Confirmed with a real test email.
 - [x] Checked Wallet Security Settings on Mainnet — "Confirmation UIs" is
       on by default there too, matching testnet; no change needed.
-- [ ] Still open: copy the **production** `CIRCLE_API_KEY` from Console →
-      Keys (Mainnet) and set it in the backend's env (Vercel) — the backend
-      currently only has a sandbox/testnet key. Until this is set, mainnet
-      Circle-wallet calls will fail at Circle's end even though the app-side
-      wiring (steps above) is done.
+- [x] **Caught before it shipped:** the backend had a single global
+      `CIRCLE_API_KEY`, used for every Circle call regardless of network.
+      Setting it to the Mainnet key would have silently broken every
+      testnet Circle-wallet call (and vice versa) — same mistake class as
+      the blockchain identifier, just one step later. Fixed the same way:
+      `CIRCLE_API_KEY_BY_NETWORK` in `server.js` maps testnet →
+      `process.env.CIRCLE_API_KEY` (unchanged, already set in Vercel) and
+      mainnet → `process.env.CIRCLE_API_KEY_MAINNET` (new). All 9 routes
+      that called Circle now build their auth header via
+      `getCircleHeaders(getRequestNetwork(req))` instead of one shared
+      object. Verified locally: testnet and mainnet requests each reach
+      Circle with their own key, no cross-contamination.
+- [x] Mainnet Circle keys created in Console (Standard API Key named
+      "ProofPay Backend", matching testnet's naming; Client Keys page is
+      unused by ProofPay's code — skipped it). App ID was auto-created the
+      first time Mainnet was opened in Configurator.
+- [x] **Same class of bug, found again on the frontend:** `VITE_CIRCLE_APP_ID`
+      is a Vite build-time env var — a single value baked into the deployed
+      bundle — but which network is active is a *runtime* choice (the
+      Navbar toggle). One App ID could never serve both networks correctly.
+      Fixed in `config/network.js`: each network now has its own
+      `circleAppId`, read from `VITE_CIRCLE_APP_ID_MAINNET` /
+      `VITE_CIRCLE_APP_ID_TESTNET` (both baked into the same build; the
+      toggle's page reload picks the right one at runtime).
+      `VITE_CIRCLE_APP_ID` (no suffix) still works as a fallback for
+      testnet only, so the existing Vercel config isn't broken by this.
+- [ ] Still open: set these two in Vercel's frontend env —
+      `VITE_CIRCLE_APP_ID_TESTNET` (same value as the current
+      `VITE_CIRCLE_APP_ID`, or leave that var as-is and skip this one) and
+      `VITE_CIRCLE_APP_ID_MAINNET` (the Mainnet App ID) — and this one in
+      the backend env: `CIRCLE_API_KEY_MAINNET` (the new Mainnet API key,
+      **not** the existing `CIRCLE_API_KEY`, which stays pointed at
+      testnet). Until these are set, mainnet Circle-wallet calls fail
+      cleanly at Circle's end (empty/wrong key) even though all the
+      app-side wiring is done.
 
 ## 6. Decide: one app for both networks, or separate deployments? — RESOLVED
 
