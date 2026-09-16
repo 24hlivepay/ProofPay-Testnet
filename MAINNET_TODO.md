@@ -186,10 +186,21 @@ fallback addresses in `escrowAssets.js` are ever rotated:
 - [x] Confirmed the Circle Wallets API blockchain identifier for Arc
       Mainnet is `"ARC"` (developers.circle.com/wallets docs) — now the
       default in code, no env var needed (see step 4's backend section)
-- [ ] Enable Arc mainnet for the Circle user-controlled wallet app config
-      (Wallets → User Controlled → Configurator) — the console's own
-      "Blockchains" list on the Mainnet Wallets overview page already shows
-      an Arc icon, but double-check nothing else needs turning on there
+- [ ] **Blocker found 2026-09-16 — Circle gates Mainnet Wallets/Contracts
+      behind "Upgrade to unlock this feature."** Console → Mainnet →
+      Wallets shows a lock icon; clicking it prompts for a card before
+      granting access, not just an Arc-specific toggle. Pricing (confirmed
+      from the console's own pricing modal): Wallets — first 1,000 active
+      wallets/month free, then $0.05/wallet ($0.038 signing-API-only) up to
+      5,000, rebates for wallets holding ≥10 USDC; Contracts — first 25,000
+      API calls/month free, then $0.0005/call. For ProofPay's expected
+      early-stage volume this should stay in the free tier, but Circle still
+      requires a card on file to unlock Mainnet at all. **This needs a human
+      to add a payment method in Circle's console — not something to
+      automate or delegate.**
+- [ ] Once unlocked, double-check the Arc-specific config in Wallets → User
+      Controlled → Configurator (the Mainnet overview page already lists an
+      Arc icon under "Blockchains")
 - [ ] Confirm `CIRCLE_API_KEY` in backend is a production key, not sandbox
 
 ## 6. Decide: one app for both networks, or separate deployments? — RESOLVED
