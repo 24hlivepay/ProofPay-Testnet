@@ -163,18 +163,18 @@ counted together in `/api/escrow-stats`, `/api/admin/disputes`, and
   mainnet `cirBTC` is correctly rejected; `node --check` and the real
   server boot both passed clean.
 
-**Also fixed the Circle-hosted (email-login) wallet blockchain identifier
-the same way, still without guessing it:** `CIRCLE_BLOCKCHAIN_BY_NETWORK` in
-`server.js` maps testnet → `"ARC-TESTNET"` and mainnet →
-`process.env.CIRCLE_MAINNET_BLOCKCHAIN` (unset by default). If a mainnet
-Circle-wallet request comes in before that env var is set, the backend now
-returns a clear `501` — *"Circle wallets on Arc Mainnet are not configured
-yet..."* — instead of silently doing nothing or guessing wrong. Confirmed
-this with a live curl test. The frontend (`OtpVerification.jsx`'s
-`findArcWallet`) mirrors this via `network.js`'s new `circleBlockchain`
-field (`null` for mainnet), so it correctly falls through to wallet
-creation — which then hits the same clear backend error — instead of
-matching the wrong wallet.
+**✅ RESOLVED 2026-09-16 — Circle-hosted (email-login) wallets now work on
+mainnet too.** Confirmed the mainnet blockchain identifier directly from
+Circle's official docs (developers.circle.com/wallets → Build onchain →
+Supported blockchains table): Arc's mainnet/testnet chain codes are
+**`ARC`** / `ARC-TESTNET` — not the `ARC-MAINNET` this file originally
+guessed at and correctly refused to hardcode. Both `server.js`'s
+`CIRCLE_BLOCKCHAIN_BY_NETWORK` and the frontend's `network.js`
+`circleBlockchain` field now default to `"ARC"` for mainnet
+(`CIRCLE_MAINNET_BLOCKCHAIN` env var can still override it). Verified live:
+`/api/circle/wallets` with a mainnet header now reaches Circle's real API
+with `blockchain=ARC` instead of 501ing (only fails on the dummy test API
+key used for the check, as expected).
 
 Also still open — Vercel production env vars, only needed if the hardcoded
 fallback addresses in `escrowAssets.js` are ever rotated:
@@ -183,14 +183,14 @@ fallback addresses in `escrowAssets.js` are ever rotated:
 
 ## 5. Circle Developer Console
 
+- [x] Confirmed the Circle Wallets API blockchain identifier for Arc
+      Mainnet is `"ARC"` (developers.circle.com/wallets docs) — now the
+      default in code, no env var needed (see step 4's backend section)
 - [ ] Enable Arc mainnet for the Circle user-controlled wallet app config
-      (Wallets → User Controlled → Configurator)
+      (Wallets → User Controlled → Configurator) — the console's own
+      "Blockchains" list on the Mainnet Wallets overview page already shows
+      an Arc icon, but double-check nothing else needs turning on there
 - [ ] Confirm `CIRCLE_API_KEY` in backend is a production key, not sandbox
-- [ ] Get the confirmed Circle Wallets API blockchain identifier for Arc
-      Mainnet, then set it as `CIRCLE_MAINNET_BLOCKCHAIN` in the backend's
-      env (Vercel). Until this is set, mainnet Circle-wallet (email-login)
-      sign-up cleanly refuses with a 501 instead of guessing — see step 4's
-      backend section for how this is wired.
 
 ## 6. Decide: one app for both networks, or separate deployments? — RESOLVED
 
