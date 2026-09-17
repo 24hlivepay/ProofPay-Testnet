@@ -158,15 +158,22 @@ address on every network, since that's plain Ethereum key behavior, not
 Circle-mediated. Anyone who wants one consistent address across both
 networks should use MetaMask/Rabby, not Circle email login.
 
+**✅ CONFIRMED by Circle Customer Care, 2026-09-17** (support ticket reply):
+*"Circle's Testnet (Sandbox) and Mainnet (Production) environments are
+entirely separate, isolated systems. Each environment has its own
+independent user registry, API keys, and cryptographic key-generation
+infrastructure... there is no way to link them or force an identical
+wallet address across Testnet and Mainnet."* Matches what the docs said
+and what today's live testing showed — no longer just an inference from
+docs, Circle's own support has now said it directly. Nothing to change;
+the existing design (separate wallet per network, session cleared on
+switch) is correct as-is.
+
 Genuinely still open (no urgent deadline, but real):
 - Independent smart-contract security audit (see step 3 — self-review
   found 2 HIGH findings, still needs a real audit)
 - A real MetaMask/Rabby escrow on mainnet with a small real amount, for
   the strongest possible end-to-end confirmation (optional — real money)
-- Waiting on Circle's Discord/support reply to the question about whether
-  a user can ever get the same wallet address on Testnet and Mainnet (see
-  the "raised and settled" note above — current answer from docs is no,
-  asked Circle directly to double-check)
 
 ## 1. Get official mainnet details from Circle docs
 
