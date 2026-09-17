@@ -40,9 +40,19 @@ mainnet env vars set. **Now live-testing proofpay.online directly.**
       case for Circle's actual "session has expired" error, which had
       been falling through to the misleading MetaMask-flavored message.
       Pushed; rebuilding now.
-- [ ] **Re-test after this rebuild:** switch networks, click "Connect
-      Wallet", confirm it goes to email/OTP sign-in (not a MetaMask
-      error), and that testnet shows the original testnet wallet/history
+- [x] **Re-tested after rebuild — confirmed working end to end.** Switched
+      mainnet → testnet, dashboard showed "Connect Wallet", clicking it
+      correctly went to email/OTP sign-in (not the MetaMask error), and
+      after verifying the OTP the user's *original* testnet wallet came
+      back (Circle recognized the existing testnet identity rather than
+      creating a new one). All three fixes — session clearing, correct
+      reconnect routing, and Circle's own wallet lookup — work together
+      correctly.
+- [x] Also replaced the native `window.confirm()` network-switch dialog
+      (a full browser-centered popup, felt disconnected from the small
+      nav badge that triggered it) with a small inline popover anchored
+      right under the badge, styled to match `Home.jsx`'s existing wallet
+      dropdown. Pushed.
 - [ ] Try a real MetaMask/Rabby escrow on mainnet if you want the
       strongest possible confirmation (real money, optional)
 
