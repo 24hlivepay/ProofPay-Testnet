@@ -64,6 +64,31 @@ mainnet env vars set. **Now live-testing proofpay.online directly.**
       keys (`proofpay-wallet-type`, `-email`, `-circle-auth`,
       `-last-safe-route`, `-escrows`) are either wallet-type-agnostic or
       transient per-escrow form state, not identity — no fix needed there.
+- [x] **Navbar UX pass, 2026-09-17** (all based on direct user feedback
+      while testing the live site):
+      - Replaced `window.confirm()`'s network-switch dialog with a direct
+        network list (click badge → pick network → switched immediately,
+        matching MetaMask's own pattern) instead of an extra confirm step
+      - Removed the redundant "Network: ..." tile from Home.jsx's hero
+        card (Navbar's badge already covers it) and hid the cirBTC stat
+        card on mainnet (no cirBTC support there)
+      - Moved the Wallet button out of Home.jsx's hero card into
+        `Navbar.jsx` itself (`walletSlot` prop), positioned after the
+        network badge (network first, wallet second — standard dApp
+        order) — but a prop only Home.jsx passed, so it was invisible on
+        the other 21 pages that render Navbar. Built
+        `hooks/useWalletBadge.jsx`, a lighter self-contained version of
+        Home's wallet button/dropdown, and wired it into all of them
+        (Login.jsx/OtpVerification.jsx deliberately excluded — no wallet
+        exists yet on the pages whose job is connecting one)
+      - Added `hooks/useClickOutside.js`: both the network and wallet
+        dropdowns only closed via their own toggle button; clicking
+        anywhere else left them stuck open. Now closes on any outside
+        click without changing the selection
+      - Navbar was constrained to `max-w-6xl mx-auto` like page content,
+        leaving a large empty gap between the badges and the real
+        browser edge on wide screens. Made it full-width (just the side
+        padding remains)
 - [ ] Try a real MetaMask/Rabby escrow on mainnet if you want the
       strongest possible confirmation (real money, optional)
 
