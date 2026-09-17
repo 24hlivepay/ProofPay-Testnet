@@ -3,6 +3,41 @@
 Arc mainnet went live **September 16, 2026**. Step 1 details are now
 published — see below. Everything after step 1 still needs doing.
 
+## New feature: real user profiles + buyer/seller name auto-fill, 2026-09-18
+
+Profile.jsx was 100% fake placeholder data (hardcoded wallet address,
+fake "12 Orders / 100% Success" stats, no name field). Buyer/seller
+names on CreateEscrow.jsx were plain manually-typed text every time.
+
+Implemented (localStorage-based, keyed by wallet address, no backend
+schema change needed beyond one field on accept):
+- `frontend/src/utils/profile.js` — `getProfileName`/`setProfileName`,
+  stores a name under `proofpay-profile-name:<address>`.
+- `Profile.jsx` rebuilt: shows the real connected wallet address (was
+  hardcoded), editable Name field that saves to the above storage.
+  Removed the fake Orders/Success stats box — showing fabricated
+  numbers as real user stats was worse than showing nothing; real
+  stats would need backend aggregation and weren't asked for.
+- `CreateEscrow.jsx` auto-fills Buyer Name from the connected wallet's
+  saved profile (still editable), and saves whatever name is typed
+  back to the profile on submit — so it also self-populates over time
+  for anyone who never visits the Profile page directly.
+- `SellerAccept.jsx`: after the seller connects their wallet, an
+  editable "Your Name" field appears (pre-filled from their saved
+  profile, falling back to the buyer's placeholder text if the seller
+  has none yet). On Accept, this is sent as `sellerName` and saved to
+  the seller's own profile. Backend `/api/escrow/:id/accept` now
+  accepts an optional `sellerName` and overwrites the placeholder with
+  it.
+- Added a "Profile" entry to the wallet dropdown menu (both
+  `useWalletBadge.jsx`'s shared menu and `Home.jsx`'s own copy) so it's
+  reachable from every page, not just by typing the URL.
+
+Verified via `vite build` + `vite preview` with a seeded fake wallet
+session before pushing: wallet address displays correctly, saved name
+pre-fills on both Profile and CreateEscrow, and the wallet-dropdown
+Profile link opens the page.
+
 ## More hardcoded "ARC Testnet" strings found via live testing, 2026-09-17
 
 User spotted BuyerDeposit.jsx showing "...lock the USDC in the live ARC
