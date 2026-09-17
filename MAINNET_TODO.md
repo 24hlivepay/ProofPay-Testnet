@@ -3,29 +3,60 @@
 Arc mainnet went live **September 16, 2026**. Step 1 details are now
 published — see below. Everything after step 1 still needs doing.
 
-## ⏸️ Where we left off (2026-09-17, end of session)
+## ⏸️ Where we left off (2026-09-17, live-testing in progress)
 
-Everything below is done: contracts deployed and verified, frontend +
-backend wired for both networks, Circle Console configured (billing,
-Email/SMTP, keys), Vercel repointed to `ProofPay-Mainnet` with the mainnet
-env vars set, and a rebuild triggered.
+Contracts deployed/verified, frontend + backend wired for both networks,
+Circle Console configured, Vercel repointed to `ProofPay-Mainnet` with
+mainnet env vars set. **Now live-testing proofpay.online directly.**
 
-**First thing to do tomorrow: verify the live site actually works.**
-Nothing below has been confirmed against the real, deployed
-proofpay.online yet — the last redeploy was only just triggered.
+- [x] Circle email sign-up on mainnet — **works**. Confirmed live: logging
+      in with an email already used on testnet correctly got a *different*
+      wallet address (Circle issues a separate wallet per network), which
+      proves `CIRCLE_API_KEY_MAINNET` / `VITE_CIRCLE_APP_ID_MAINNET` /
+      `blockchain: "ARC"` are all working end to end.
+- [x] **Bug found and fixed via live testing:** switching the navbar
+      toggle to testnet kept showing the *mainnet* wallet's address, with
+      no testnet history. Cause: `proofpay-wallet-session` in localStorage
+      is a single cached value with no network dimension, and the app
+      routes straight to the dashboard whenever it's present — regardless
+      of which network is currently selected. Fixed in
+      `components/Navbar.jsx`: switching networks now clears that cached
+      session first (only for Circle wallets — MetaMask/Rabby use the same
+      address on every network, so they're unaffected), forcing a fresh
+      sign-in scoped to the newly selected network. Pushed; rebuilding now.
+- [x] **Second bug found via the same re-test, also fixed:** after the
+      session-clearing fix above, switching networks correctly showed
+      "Connect Wallet" — but clicking it threw "We could not connect your
+      wallet. Please unlock MetaMask or Rabby", even for a Circle-wallet
+      user. Cause: `Home.jsx`'s `handleWalletButton` called
+      `handleConnectWallet()` unconditionally whenever no address was
+      present, which always drives the MetaMask/Rabby flow regardless of
+      the stored wallet type — a pre-existing bug the first fix newly
+      exposed (Circle sessions essentially never emptied out mid-use
+      before today). Fixed: `handleWalletButton` now checks
+      `isCircleWallet` and routes to `/login` (email/OTP) first, matching
+      a check this same file's `onChangeWallet` callback already had a
+      few lines down. Also added the missing `getWalletErrorMessage()`
+      case for Circle's actual "session has expired" error, which had
+      been falling through to the misleading MetaMask-flavored message.
+      Pushed; rebuilding now.
+- [ ] **Re-test after this rebuild:** switch networks, click "Connect
+      Wallet", confirm it goes to email/OTP sign-in (not a MetaMask
+      error), and that testnet shows the original testnet wallet/history
+- [ ] Try a real MetaMask/Rabby escrow on mainnet if you want the
+      strongest possible confirmation (real money, optional)
 
-- [ ] Open proofpay.online, confirm the build succeeded (check Vercel
-      Deployments tab for "Ready", not "Error")
-- [ ] Confirm the navbar network badge shows correctly and defaults to
-      Arc Mainnet
-- [ ] Try a real Circle email sign-up on mainnet — this is the part that
-      depends on today's last fixes (`CIRCLE_API_KEY_MAINNET`,
-      `VITE_CIRCLE_APP_ID_MAINNET`) actually working end to end
-- [ ] Click the navbar toggle, confirm testnet still works exactly as
-      before (nothing regressed)
-- [ ] If a real MetaMask/Rabby test escrow is worth doing on mainnet with
-      a small real amount, that's the strongest possible confirmation —
-      optional, real money, only if you want that level of certainty
+**❌ Raised and settled: "same wallet address on both networks" is not
+possible for Circle email-login wallets — this is a Circle platform limit,
+not a bug.** Circle's own docs: *"API Keys are scoped to either Testnet or
+Mainnet... you cannot use a single API key across both environments."*
+Unified EVM addressing (one address, many chains) only works *within* one
+environment; Mainnet and Testnet are separate environments with separate
+user directories, so a Circle-hosted wallet is unavoidably different per
+network. MetaMask/Rabby wallets do **not** have this limitation — same
+address on every network, since that's plain Ethereum key behavior, not
+Circle-mediated. Anyone who wants one consistent address across both
+networks should use MetaMask/Rabby, not Circle email login.
 
 Still open after that (not urgent, no deadline):
 - Independent smart-contract security audit (see step 3 — self-review
