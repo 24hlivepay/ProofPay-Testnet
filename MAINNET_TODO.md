@@ -53,6 +53,17 @@ mainnet env vars set. **Now live-testing proofpay.online directly.**
       nav badge that triggered it) with a small inline popover anchored
       right under the badge, styled to match `Home.jsx`'s existing wallet
       dropdown. Pushed.
+- [x] **Audited for the same bug class elsewhere** (every `localStorage`
+      key the frontend uses) after finding it twice today. Found one more:
+      `proofpay-wallet` is a second cache of the Circle wallet address
+      (`OtpVerification.jsx` sets it alongside `proofpay-wallet-session`;
+      `proofpayContract.js`'s Circle-wallet functions read it directly)
+      that the earlier fix didn't clear. Narrow edge case — only reachable
+      via a deep link/bookmark that skips `SessionLanding`'s redirect —
+      but cheap to close, so `Navbar.jsx` now clears it too. The other
+      keys (`proofpay-wallet-type`, `-email`, `-circle-auth`,
+      `-last-safe-route`, `-escrows`) are either wallet-type-agnostic or
+      transient per-escrow form state, not identity — no fix needed there.
 - [ ] Try a real MetaMask/Rabby escrow on mainnet if you want the
       strongest possible confirmation (real money, optional)
 
