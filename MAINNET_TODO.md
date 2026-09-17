@@ -89,6 +89,24 @@ mainnet env vars set. **Now live-testing proofpay.online directly.**
         leaving a large empty gap between the badges and the real
         browser edge on wide screens. Made it full-width (just the side
         padding remains)
+- [x] **App-wide network theme, 2026-09-17.** Blue retired as the brand
+      accent everywhere, not just Home.jsx/Navbar: green on mainnet,
+      amber on testnet. Given ~20+ pages use blue-* Tailwind utilities,
+      hand-editing every className wasn't reliable — instead
+      `main.jsx` sets `data-network` on `<html>` from
+      `config/network.js`, and `index.css` adds `!important` overrides
+      for every distinct blue-* utility actually used in the app
+      (grepped the full set: bg/text/border/border-t/shadow/ring/
+      gradient from+via, plus hover:/focus:/disabled:/file: variants),
+      scoped to `[data-network="mainnet"]` → green or
+      `[data-network="testnet"]` → amber CSS variables. Verified against
+      the compiled CSS bundle that Tailwind v4's actual gradient
+      variable names (`--tw-gradient-from`, `--tw-gradient-via`) match
+      what the override sets, so the two remaining blue gradient hero
+      cards (`WaitingSeller.jsx`, `CircleWallet.jsx`) are covered without
+      editing those files directly. The Navbar logo was inlined as SVG
+      (was a static blue `.svg` file via `<img>`, uncolorable by CSS) so
+      its background square also switches with the theme.
 - [ ] Try a real MetaMask/Rabby escrow on mainnet if you want the
       strongest possible confirmation (real money, optional)
 
