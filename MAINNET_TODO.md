@@ -3,6 +3,34 @@
 Arc mainnet went live **September 16, 2026**. Step 1 details are now
 published — see below. Everything after step 1 still needs doing.
 
+## Profile follow-up: seller name moved off the buyer form, emails wired in, 2026-09-18
+
+User wanted the "Business / Seller Name" field gone from CreateEscrow
+entirely — the buyer shouldn't type a placeholder for someone who
+hasn't even connected yet. The seller now supplies their own name (and
+email, silently pulled from their saved profile) when they accept via
+SellerAccept, same as before for the name; added `sellerEmail` the
+same way, stored on `escrow.sellerEmail` by the accept endpoint.
+
+CreateEscrow.jsx: removed the whole "Seller Information" section and
+the `sellerName` required-field check; added a `buyerEmail` line
+(pulled from the buyer's own profile) shown right under Buyer Name,
+and it's now included in the escrow-creation payload.
+
+BuyerDeposit.jsx: the Seller name/email in the Escrow Summary now only
+render once `sellerVerified` is true (gated behind the same `verified`
+flag the code-verification step already tracks) — the buyer sees who
+they're paying only after the seller has proven control of their
+wallet, not the moment they accept. EscrowActive.jsx (reached only
+after verification + deposit) shows Seller email unconditionally since
+verification is already guaranteed there.
+
+Also removed the "Seller Name" summary row from GenerateLink.jsx and
+WaitingSeller.jsx (the two "link generated / waiting for seller"
+screens) since it would always be blank at that stage now — checked
+both are shown only before acceptance, confirmed via each page's own
+navigate-away-on-accept logic.
+
 ## Profile follow-up: added email address field, 2026-09-18
 
 User asked for an Email Address field too, and for the name field's
