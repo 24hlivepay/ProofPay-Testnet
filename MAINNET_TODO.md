@@ -169,11 +169,15 @@ docs, Circle's own support has now said it directly. Nothing to change;
 the existing design (separate wallet per network, session cleared on
 switch) is correct as-is.
 
+- [x] **Real MetaMask/Rabby escrow on mainnet — done and successful**
+      (2026-09-16, confirmed by the user 2026-09-17). Strongest possible
+      end-to-end confirmation of the USDC escrow contract with real
+      funds: deposit, contract interaction, and settlement all worked as
+      designed on live Arc Mainnet.
+
 Genuinely still open (no urgent deadline, but real):
 - Independent smart-contract security audit (see step 3 — self-review
   found 2 HIGH findings, still needs a real audit)
-- A real MetaMask/Rabby escrow on mainnet with a small real amount, for
-  the strongest possible end-to-end confirmation (optional — real money)
 
 ## 1. Get official mainnet details from Circle docs
 
