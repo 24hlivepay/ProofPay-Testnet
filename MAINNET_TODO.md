@@ -3,6 +3,40 @@
 Arc mainnet went live **September 16, 2026**. Step 1 details are now
 published — see below. Everything after step 1 still needs doing.
 
+## ⏸️ Where we left off (2026-09-18, stopped for the day)
+
+Mainnet itself has been live and tested since 2026-09-17 (real
+MetaMask escrow test succeeded, dual-network toggle, Circle Console,
+Vercel cutover — all done). Today's session was all about the new
+Profile feature, built and pushed in three follow-up rounds (see
+sections below, newest first):
+
+1. Real user profiles (name, keyed by wallet) with buyer/seller
+   auto-fill, plus a "Profile" entry in the wallet dropdown.
+2. Added an Email Address field to Profile; renamed the name field's
+   label to "User Name" (still free text, personal or company name).
+3. Removed the "Business / Seller Name" field from CreateEscrow
+   entirely — seller name/email now come from the seller's own saved
+   profile at accept time, and only appear to the buyer once the
+   seller is verified. Buyer's own email now shows under Buyer Name
+   on the create form.
+
+Everything above is committed and pushed to `ProofPay-Mainnet` (code)
+and this checklist repo. Nothing is mid-edit or broken.
+
+**Not done / open items:**
+- Independent professional smart-contract audit of `ProofPayEscrow.sol`
+  (self-review only so far — see the security-review notes further
+  down this file).
+- Profile's stats box (Orders / Success rate) was removed as fake
+  placeholder data rather than fixed — real stats would need backend
+  aggregation per wallet and haven't been built. Revisit only if asked.
+- No other open bugs or half-finished work as of this stop point.
+
+**Resume here tomorrow** by picking either of the two items above, or
+whatever the user brings up next — there is no blocked/in-progress
+task to continue first.
+
 ## Profile follow-up: seller name moved off the buyer form, emails wired in, 2026-09-18
 
 User wanted the "Business / Seller Name" field gone from CreateEscrow
