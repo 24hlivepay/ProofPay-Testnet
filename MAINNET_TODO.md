@@ -3,6 +3,18 @@
 Arc mainnet went live **September 16, 2026**. Step 1 details are now
 published — see below. Everything after step 1 still needs doing.
 
+## Profile follow-up: added email address field, 2026-09-18
+
+User asked for an Email Address field too, and for the name field's
+label to read "User Name" (still free text — personal or company
+name). Added `getProfileEmail`/`setProfileEmail` to
+`frontend/src/utils/profile.js` (same per-wallet-address localStorage
+pattern as the name). Profile.jsx pre-fills email from the Circle
+login email (`proofpay-email`) when the profile has none saved yet.
+Both fields are plain always-editable inputs under one "Save Profile"
+button, so changing either later just means re-typing and saving
+again — no separate edit mode needed.
+
 ## New feature: real user profiles + buyer/seller name auto-fill, 2026-09-18
 
 Profile.jsx was 100% fake placeholder data (hardcoded wallet address,
