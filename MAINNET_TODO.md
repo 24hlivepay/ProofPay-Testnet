@@ -3,6 +3,21 @@
 Arc mainnet went live **September 16, 2026**. Step 1 details are now
 published — see below. Everything after step 1 still needs doing.
 
+## Bug found via live testing (not network-specific, affects testnet too)
+
+**Fixed 2026-09-17:** My Wallet's "Send Token" (a plain Circle wallet
+transfer) showed a Circle confirmation popup reading "Lock 1 USDC" —
+escrow language on an unrelated action. Cause: Circle's Web SDK
+(`circleSdk`) is a shared singleton; `executeCircleChallenge` only sets
+its confirmation copy when a `display` object is passed, and
+`sendCircleToken` never passed one, so it kept showing whatever label a
+*previous* call had set (e.g. an earlier escrow deposit's
+`"Lock ${amount} ${symbol}"` in the same session). Fixed in
+`circleTransactions.js`/`CircleWallet.jsx`: `sendCircleToken` now
+builds and passes its own `display` (title "Send Token", confirmLabel
+"Send X SYMBOL"), so a plain transfer can no longer inherit stale
+escrow copy.
+
 ## ⏸️ Where we left off (2026-09-17, live-testing in progress)
 
 Contracts deployed/verified, frontend + backend wired for both networks,
