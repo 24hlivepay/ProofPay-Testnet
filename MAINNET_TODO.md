@@ -3,6 +3,20 @@
 Arc mainnet went live **September 16, 2026**. Step 1 details are now
 published — see below. Everything after step 1 still needs doing.
 
+## More hardcoded "ARC Testnet" strings found via live testing, 2026-09-17
+
+User spotted BuyerDeposit.jsx showing "...lock the USDC in the live ARC
+Testnet contract" on mainnet. Grepping for it turned up two more in the
+same shape: SellerVerification.jsx's escrow-locked message and
+EscrowActive.jsx's page subtitle — both files already used
+`getNetworkConfig().chainName` correctly elsewhere, just not on these
+specific lines, which is presumably why the original network-wiring
+pass missed them. Fixed all three. Re-swept the whole frontend for
+"ARC "/"arcscan.app"/"5042002"/hardcoded testnet RPC URLs afterward —
+clean except four landing-page mentions of generic "ARC Blockchain"
+(Footer/Features/FAQ marketing copy), which don't claim a specific
+network and don't need fixing.
+
 ## Bug found via live testing (not network-specific, affects testnet too)
 
 **Fixed 2026-09-17:** My Wallet's "Send Token" (a plain Circle wallet
