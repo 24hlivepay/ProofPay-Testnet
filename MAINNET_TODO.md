@@ -107,6 +107,42 @@ mainnet env vars set. **Now live-testing proofpay.online directly.**
       editing those files directly. The Navbar logo was inlined as SVG
       (was a static blue `.svg` file via `<img>`, uncolorable by CSS) so
       its background square also switches with the theme.
+
+  **🔴 That version shipped a production bug — every "blue" button/card
+  went invisible.** The `--net-*` colors were defined as two CSS blocks,
+  `[data-network="mainnet"] {...}` and `[data-network="testnet"] {...}`,
+  with identical property names and different values. Tailwind v4's
+  build (Lightning CSS) silently treated them as duplicate rules and
+  dropped one — confirmed directly on the deployed bundle: zero
+  occurrences of `data-network=mainnet` survived minification, only
+  `testnet` did. Every override then resolved `var(--net-*)` to nothing,
+  so `background-color` fell back to transparent — white text on a
+  transparent button over a white page, effectively invisible. Caught by
+  the user screenshotting the live site, not by anything on this end
+  beforehand.
+
+  **Fixed and re-verified properly this time:** the `--net-*` values are
+  now set as plain inline styles on `<html>` from a `NETWORK_COLORS`
+  lookup object in `main.jsx` (`style.setProperty` in a loop) instead of
+  as CSS Lightning CSS could merge away; `index.css` keeps only the
+  class-name override rules. Before pushing, built the bundle, served it
+  with `vite preview` locally, and confirmed via `getComputedStyle` in
+  the browser that `--net-600` resolves and buttons render solid
+  green/amber — not just "the build succeeded," which is what was
+  wrongly treated as sufficient the first time.
+
+  **Lesson for any future app-wide CSS change here:** `npm run build`
+  passing is necessary but **not sufficient** — it does not catch a
+  minifier merging/dropping rules it considers duplicates. Load the
+  actual built output (`vite preview` or equivalent) and check computed
+  styles before pushing, every time, not just for this one theme change.
+- [x] **Logo recolored too, 2026-09-17.** `landing/Hero.jsx` and
+      `SellerAccept.jsx` still loaded the static blue
+      `/proofpay-logo.svg` via `<img>` (Navbar's logo was inlined
+      earlier, these two weren't). Extracted a shared
+      `components/ProofPayLogo.jsx` so the three call sites can't drift
+      out of sync again. Verified with a local `vite preview` screenshot
+      before pushing.
 - [ ] Try a real MetaMask/Rabby escrow on mainnet if you want the
       strongest possible confirmation (real money, optional)
 
