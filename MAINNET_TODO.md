@@ -68,12 +68,15 @@ address on every network, since that's plain Ethereum key behavior, not
 Circle-mediated. Anyone who wants one consistent address across both
 networks should use MetaMask/Rabby, not Circle email login.
 
-Still open after that (not urgent, no deadline):
+Genuinely still open (no urgent deadline, but real):
 - Independent smart-contract security audit (see step 3 — self-review
   found 2 HIGH findings, still needs a real audit)
-- Circle Wallets API's `blockchain: "ARC"` value works per docs, but has
-  not yet been exercised by an actual successful mainnet wallet creation —
-  worth confirming once the live-site check above is done
+- A real MetaMask/Rabby escrow on mainnet with a small real amount, for
+  the strongest possible end-to-end confirmation (optional — real money)
+- Waiting on Circle's Discord/support reply to the question about whether
+  a user can ever get the same wallet address on Testnet and Mainnet (see
+  the "raised and settled" note above — current answer from docs is no,
+  asked Circle directly to double-check)
 
 ## 1. Get official mainnet details from Circle docs
 
@@ -119,9 +122,14 @@ scaffold/placeholder and was never actually used for the real deploy.
       — tx `0x6e3fe0bad04c9ec3fffa78000a5051b077864580d5cfc5b9e901cb5067cb4dce`,
       block 21188797. Confirmed on-chain: linked token matches EURC address.
 - [x] cirBTC escrow correctly skipped — no mainnet contract published yet
-- [ ] Verify the deployed contracts on the mainnet block explorer
-      (`explorer.arc.io` — docs note permissioned access; not yet confirmed
-      this deployer/account can view it)
+- [x] **Verified on the mainnet block explorer, 2026-09-17.**
+      `explorer.arc.io` turned out to be publicly accessible — no
+      permission wall, contrary to what the docs implied. Checked both:
+      - USDC escrow `0x626B...BC79`: creator `0xD9...91AC` (deployer) ✓,
+        creation tx `0x17...aa82` matches ✓, 7 transactions / 4 token
+        transfers already recorded (from today's live testing)
+      - EURC escrow `0xF6f0...62C0`: creator `0xD9...91AC` ✓, creation tx
+        `0x6e...4dce` matches ✓, 1 transaction (the deploy itself)
 - Total gas paid: ~0.1120 USDC across both deploys. Deployer balance after:
   **~9.884 USDC**.
 
