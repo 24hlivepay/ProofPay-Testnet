@@ -3,6 +3,35 @@
 Arc mainnet went live **September 16, 2026**. Step 1 details are now
 published — see below. Everything after step 1 still needs doing.
 
+## Fixed inconsistent buyer/seller name+email visibility across records, 2026-09-19
+
+User caught this live: on BuyerDeposit (right after the seller
+accepted and shared their OTP), Seller wallet showed but Seller name
+and both people's emails were missing — a confusing half-revealed
+state. Root cause: Seller name/email were gated behind seller-code
+`verified`, while Seller wallet was not, and Buyer email had never
+been added to this summary at all.
+
+Fixed: Seller name/email in `BuyerDeposit.jsx` now show as soon as
+they exist on the record (same visibility as Seller wallet, i.e. right
+after accept — no longer waiting for code verification). Added Buyer
+email there too. Extended the same Buyer/Seller email fields to every
+other core "escrow record" summary screen: `EscrowActive.jsx` (Buyer
+email), `SellerAccept.jsx`'s post-connect review (Buyer email),
+`WaitingSeller.jsx`'s pre-accept summary (Buyer email — seller isn't
+known yet at that stage). `GenerateLink.jsx` intentionally skipped
+(confirmed unreachable/dead route). Dispute pages (MyDisputes/
+DisputeResponse/AdminDisputes) intentionally not touched — same
+lower-priority call as the copy-button work, flagged to the user again
+in case they want it done too.
+
+Not live-tested end-to-end this round: the local backend refuses to
+boot without real `CIRCLE_API_KEY` env vars (validated at import
+time), and no `.env` exists locally — only `.env.example`. Verified by
+re-reading the exact diff instead; the pattern used
+(`{escrowData.xEmail && <SummaryRow .../>}`) is identical to rows
+already proven correct in-browser earlier this session.
+
 ## Profile save now shows clear confirmation + auto-redirects, 2026-09-19
 
 User felt the "Saved ✓" button-text swap alone wasn't enough feedback
