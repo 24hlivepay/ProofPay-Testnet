@@ -3,6 +3,16 @@
 Arc mainnet went live **September 16, 2026**. Step 1 details are now
 published — see below. Everything after step 1 still needs doing.
 
+## Dropdown width fix looked bad in practice — tightened it up, 2026-09-19
+
+Matching the dropdown to the pill's width (previous entry) made
+"Disconnect Wallet" wrap to two lines while every row still had
+generous `py-3` padding — an uneven, oddly-spaced result once actually
+seen. Fixed by shrinking to `text-xs`, `py-2`/`px-3`, adding
+`whitespace-nowrap`, and shortening "Disconnect Wallet" to just
+"Disconnect" so all three rows fit on one line at that width.
+Verified visually via `vite preview`.
+
 ## Wallet dropdown now matches the pill's width exactly, 2026-09-19
 
 Real screenshot: the dropdown menu (Profile/Change Wallet/Disconnect
