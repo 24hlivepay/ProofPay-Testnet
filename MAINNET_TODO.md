@@ -3,6 +3,21 @@
 Arc mainnet went live **September 16, 2026**. Step 1 details are now
 published — see below. Everything after step 1 still needs doing.
 
+## Copy button follow-up: restyled to match real wallet-app practice, 2026-09-19
+
+User flagged the first version — a bordered 📋-in-a-box button, with
+the dropdown showing the full raw address CSS-ellipsis-cut mid
+character and wrapping to two lines inside its own bordered card —
+as looking odd, and asked to check what real apps actually do.
+
+Redesigned `CopyButton.jsx` as a minimal ghost icon button (outline
+copy/checkmark SVGs, no border or background, just a subtle hover
+state) — the MetaMask/Etherscan pattern. Also fixed both wallet
+dropdowns (`useWalletBadge.jsx`, `Home.jsx`) to show the same
+truncated `0xabc1...def0` format already used on the pill itself,
+instead of the full 42-char address getting cut off mid-string by
+CSS `truncate`.
+
 ## New: copy-to-clipboard buttons on wallet addresses, 2026-09-19
 
 User asked for a copy button wherever a wallet address is shown (their
