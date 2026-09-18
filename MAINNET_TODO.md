@@ -3,6 +3,28 @@
 Arc mainnet went live **September 16, 2026**. Step 1 details are now
 published — see below. Everything after step 1 still needs doing.
 
+## Header follow-up: name+ID only (matched size), product to the grid, 2026-09-19
+
+From another real screenshot: the header had grown to 3 lines (Escrow
+ID, product name, counterparty name) with mismatched sizing (ID a big
+h2, name a small caption). Asked to check understanding first before
+implementing — confirmed the plan, then confirmed the role direction
+explicitly: buyer's dashboard header shows the *seller's* name+ID,
+seller's dashboard shows the *buyer's*.
+
+Trimmed each header to exactly 2 lines — name first, escrow ID right
+under it, both `text-lg font-bold` (equal weight now). Product name
+moved out of the header into the stats grid as its own tile, so each
+grid is back to its original column count
+(`sm:grid-cols-2 lg:grid-cols-4` for Active/Pending/Completed,
+`sm:grid-cols-3` for Cancelled). Same four files as the previous
+round: `ActiveOrders.jsx`, `PendingOrders.jsx`, `CompletedOrders.jsx`,
+`CancelledOrders.jsx`.
+
+Still couldn't live-test locally (same `CIRCLE_API_KEY` boot blocker);
+verified via `vite build` (clean) + full diff re-read across all four
+files.
+
 ## Counterparty name moved into the card header, every order list, 2026-09-19
 
 From a real "Active Purchases" screenshot: Escrow ID + product name at
