@@ -3,6 +3,38 @@
 Arc mainnet went live **September 16, 2026**. Step 1 details are now
 published — see below. Everything after step 1 still needs doing.
 
+## New: copy-to-clipboard buttons on wallet addresses, 2026-09-19
+
+User asked for a copy button wherever a wallet address is shown (their
+example: the wallet dropdown). Added a shared
+`frontend/src/components/CopyButton.jsx` (writes to clipboard, shows a
+✅ for 2s, falls back to an alert on failure) and wired it into every
+wallet-address display in the main flow: the Navbar wallet dropdown
+(both `useWalletBadge.jsx`'s shared menu and Home.jsx's own copy —
+previously only showed the truncated address on the pill itself, now
+the dropdown shows the full address + copy), Profile's Connected
+Wallet box, My Wallet's header address chip, and the buyer/seller
+wallet rows on BuyerDeposit.jsx and SellerAccept.jsx.
+
+Deliberately did NOT touch the dispute pages (MyDisputes,
+DisputeResponse, AdminDisputes) — lower-traffic admin/edge-case
+screens with dense single-line JSX; flag if the user wants those too.
+
+Verified via `vite preview`: buttons render and click correctly in
+every spot, and the clipboard write itself was confirmed against a
+pre-existing button (CircleWallet.jsx's original "Copy address") that
+fails with the identical `NotAllowedError` in this sandboxed preview
+browser — i.e. a testing-environment limitation (Permissions-Policy
+blocks clipboard-write for automation), not a bug in the new code.
+Should be re-confirmed with one real click on proofpay.online.
+
+Also used a `variant` prop on CopyButton (not raw className string
+concatenation) for the light-background instance on CircleWallet's
+gradient header, specifically to avoid a repeat of the Tailwind
+class-merge-order bug from 2026-09-17 (the "invisible buttons"
+incident) — two conflicting `border-*`/`bg-*` utility classes on one
+element is exactly the shape that bug had.
+
 ## ⏸️ Where we left off (2026-09-18, stopped for the day)
 
 Mainnet itself has been live and tested since 2026-09-17 (real
