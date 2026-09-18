@@ -3,6 +3,46 @@
 Arc mainnet went live **September 16, 2026**. Step 1 details are now
 published — see below. Everything after step 1 still needs doing.
 
+## Profile save now shows clear confirmation + auto-redirects, 2026-09-19
+
+User felt the "Saved ✓" button-text swap alone wasn't enough feedback
+after saving a profile. Added a green "✓ Profile saved — taking you
+back home..." message under the Save button, and after a ~900ms pause
+(so the message is actually readable) `handleSave` now navigates to
+`/dashboard` automatically.
+
+## CreateEscrow restructured: profile-driven, profile now mandatory, 2026-09-19
+
+User's ask, three parts:
+1. Buyer Information on CreateEscrow should stop being an editable
+   text field — it should be a fixed box showing Name / Email / Wallet
+   pulled straight from the buyer's profile.
+2. The manually-typed fields (product, amount, asset, description)
+   should move into their own separate Product Information box.
+3. (Confirmed, no change needed) Seller Information already gets its
+   own box after the seller accepts+verifies, from the 2026-09-18 work.
+4. Most important, called out as "the first thing to actually do":
+   profile completion should be mandatory before the buyer form is
+   usable at all — for a wallet created via Circle email login *or* a
+   first-time MetaMask/Rabby connection alike.
+
+Implemented in `CreateEscrow.jsx`: Buyer Information is now three
+`InfoRow`s (Name, Email, Wallet + copy button) with an "Edit in
+Profile" link, no longer an `InputField`. Added a "Product
+Information" box below it holding what used to be mixed into Buyer
+Information. Added an early-return gate: if `getProfileName(walletAddress)`
+is empty, the page shows a blocking "Complete your profile first"
+screen (message text differs slightly depending on whether a wallet
+is connected yet at all) instead of the form — this naturally covers
+both wallet types since profile storage is keyed by address, not by
+wallet type. Used lazy `useState` initializers for `buyerName`/
+`buyerEmail` (not a post-mount `useEffect` alone) specifically so the
+gate doesn't flash on-screen for users who already have a profile.
+
+Verified via `vite preview` with three seeded states: no wallet
+connected, wallet connected with no profile, and wallet connected with
+a saved profile — each showed the correct screen.
+
 ## Copy button follow-up: restyled to match real wallet-app practice, 2026-09-19
 
 User flagged the first version — a bordered 📋-in-a-box button, with
