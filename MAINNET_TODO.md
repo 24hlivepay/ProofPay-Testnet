@@ -3,6 +3,27 @@
 Arc mainnet went live **September 16, 2026**. Step 1 details are now
 published — see below. Everything after step 1 still needs doing.
 
+## Found two records still missing the standard 3 credentials, 2026-09-19
+
+User clicked "Open Escrow" from a real Active Purchases card and
+found `EscrowActive.jsx` (buyer's detail page) had Name+Email for
+Buyer and Seller but no wallet row for either — the third of the
+Name/Email/Wallet trio we'd standardized per record. Asked me to also
+check the seller side for the same gap.
+
+Checked `SellerVerification.jsx` (seller's equivalent detail page,
+reached from Active Sales → View Sale) — it had *none* of the three,
+for either party, across any of its states (Seller Accepted / Funds
+Locked / Delivered / Released) — just the verification code and
+delivery button, no identity info at all.
+
+Fixed both: `EscrowActive.jsx` gained Buyer wallet / Seller wallet
+rows (shortened + copyable, matching the established pattern).
+`SellerVerification.jsx` gained a full new "Escrow Summary" box above
+its status-dependent content — Buyer/Seller Name, Email, Wallet,
+Amount, Escrow ID — shown whenever `escrowData.escrowId` is loaded, so
+it's present through every status the page handles.
+
 ## Header follow-up: name+ID only (matched size), product to the grid, 2026-09-19
 
 From another real screenshot: the header had grown to 3 lines (Escrow
