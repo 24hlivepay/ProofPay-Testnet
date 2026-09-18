@@ -3,6 +3,13 @@
 Arc mainnet went live **September 16, 2026**. Step 1 details are now
 published — see below. Everything after step 1 still needs doing.
 
+## Dropdown spacing tightened once more (py-2 → py-1.5), 2026-09-19
+
+User wanted even less vertical space between the wallet-address row,
+Profile, Change Wallet, and Disconnect. Dropped all four rows'
+padding from `py-2` to `py-1.5` in both `useWalletBadge.jsx` and
+`Home.jsx`. Verified visually via `vite preview`.
+
 ## Dropdown width fix looked bad in practice — tightened it up, 2026-09-19
 
 Matching the dropdown to the pill's width (previous entry) made
