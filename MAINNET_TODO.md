@@ -3,6 +3,72 @@
 Arc mainnet went live **September 16, 2026**. Step 1 details are now
 published — see below. Everything after step 1 still needs doing.
 
+## ⏸️ Where we left off (2026-09-19, stopped for the day)
+
+Mainnet has been live since 2026-09-17. Today's session covered a lot
+of UI/UX polish on top of the already-live app, newest first (all
+sections below have full detail):
+
+1. Wallet dropdown spacing tightened twice (py-2 → py-1.5, plus
+   smaller text and `whitespace-nowrap` so nothing wraps).
+2. Dropdown width matched to the wallet pill (`w-56` → `w-full`).
+3. EscrowActive: removed a redundant status box.
+4. Found and fixed two records missing the standard 3 credentials
+   (Name/Email/Wallet): EscrowActive was missing both wallet rows,
+   SellerVerification was missing everything (had none of the three,
+   for either party).
+5. Order-card headers restructured twice: first moved counterparty
+   name up under the Escrow ID (across all 4 order lists — Active,
+   Pending, Completed, Cancelled), then trimmed to exactly 2 lines
+   (name, then ID, matched font size) with Product moved into the
+   stats grid instead.
+6. Wallet addresses truncated everywhere shown for confirmation
+   (Profile, CreateEscrow, BuyerDeposit, SellerAccept, CircleWallet
+   header) — full address kept only on the Receive/deposit screen,
+   with a shared `shortenAddress()` util and a `copyValue` prop
+   pattern so the copy button always copies the full address.
+7. Copy button restyled to match real wallet-app conventions
+   (MetaMask/Etherscan-style ghost icon, no border/box) after the
+   first boxed-emoji version was flagged as looking odd.
+8. Buyer/seller email rows made to always show (dash when empty)
+   instead of disappearing when unset.
+9. Seller name/email visibility bug fixed on BuyerDeposit (was gated
+   behind code-verification while Seller wallet wasn't — inconsistent,
+   confusing partial reveal).
+10. CreateEscrow restructured: Buyer Information made read-only
+    (pulled from profile), Product Information split into its own
+    box, and profile completion made mandatory before the form opens
+    (covers both Circle email-login and MetaMask/Rabby wallets).
+11. Profile page: real Name + Email fields (was 100% fake placeholder
+    data before today), save now shows a clear confirmation and
+    auto-redirects home, and a "Profile" entry added to the wallet
+    dropdown on every page.
+
+Everything above is committed and pushed to `ProofPay-Mainnet` (code)
+and this checklist repo. Nothing is mid-edit or broken.
+
+**Known local-testing limitation** (came up repeatedly today): the
+backend refuses to boot locally without real `CIRCLE_API_KEY` env
+vars (validated at import time, no `.env` present, only
+`.env.example`). Several of today's fixes on backend-data-dependent
+pages (BuyerDeposit, SellerVerification, order lists) were verified by
+careful diff re-read + `vite build`/lint instead of a live click-through,
+since the pattern used was already proven correct elsewhere in the
+session. Worth getting real (or sandbox) Circle keys into a local
+`.env` at some point so this stops being a recurring blocker.
+
+**Not done / still open:**
+- Independent professional smart-contract audit of `ProofPayEscrow.sol`
+  (self-review only so far).
+- Dispute pages (MyDisputes/DisputeResponse/AdminDisputes) were
+  deliberately left out of the last few consistency passes (copy
+  buttons, buyer/seller info) — flagged to the user multiple times,
+  never explicitly requested. Worth asking about next time UI work
+  comes up.
+
+**Resume here tomorrow** — no blocked/in-progress task, just pick up
+whatever the user brings up next.
+
 ## Dropdown spacing tightened once more (py-2 → py-1.5), 2026-09-19
 
 User wanted even less vertical space between the wallet-address row,
