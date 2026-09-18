@@ -3,6 +3,32 @@
 Arc mainnet went live **September 16, 2026**. Step 1 details are now
 published — see below. Everything after step 1 still needs doing.
 
+## Counterparty name moved into the card header, every order list, 2026-09-19
+
+From a real "Active Purchases" screenshot: Escrow ID + product name at
+top-left, but Seller name was buried as just one tile inside the
+4-column stats grid below, not immediately visible. Asked for it
+right under the serial number instead, and — confirmed explicitly in
+a follow-up — the same treatment on every record type, not just
+Active: Pending, Completed ("Payment Received"/"Payment Released"),
+and Cancelled too, both buyer-side and seller-side.
+
+Added a `{role}: {name}` byline directly under the product-name line
+in the card header of `ActiveOrders.jsx`, `PendingOrders.jsx`,
+`CompletedOrders.jsx`, and `CancelledOrders.jsx` — all four share the
+same header+stats-grid card shape, each toggled by `isSellerRole` (or
+`seller` in CompletedOrders). Removed the now-redundant name tile from
+each stats grid and dropped each grid by one column
+(`lg:grid-cols-4`→`sm:grid-cols-3`, or `sm:grid-cols-3`→`sm:grid-cols-2`
+for Cancelled) so the remaining tiles fill the row evenly.
+
+Not live-tested: same blocker as the last two rounds — local backend
+won't boot without real `CIRCLE_API_KEY` env vars, and these list
+pages need `GET /api/escrows` data. Verified via `vite build` (clean)
++ full diff re-read instead; the pattern is a straightforward JSX
+move, structurally identical to a change already visually verified in
+CreateEscrow's header this session.
+
 ## Truncated wallet addresses everywhere they're shown for confirmation, 2026-09-19
 
 User: full 42-char addresses aren't needed in most spots — just enough
