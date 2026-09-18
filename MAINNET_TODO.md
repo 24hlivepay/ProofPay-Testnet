@@ -3,6 +3,18 @@
 Arc mainnet went live **September 16, 2026**. Step 1 details are now
 published — see below. Everything after step 1 still needs doing.
 
+## Follow-up: email rows should always show, dash when empty, 2026-09-19
+
+User immediately caught the previous round's fix was still hiding the
+row entirely when a value (e.g. seller email, since the seller hadn't
+added one) was empty — confusing, looked like a missing field. Every
+`SummaryRow` in these files already falls back to `value || "—"`, so
+removed the `{value && (...)}` wrapper conditionals in `BuyerDeposit`,
+`EscrowActive`, `SellerAccept` and the inline-div version in
+`WaitingSeller` and let that existing fallback render consistently —
+every row (Buyer, Buyer email, Seller, Seller email, etc.) now always
+shows, with "—" when unset.
+
 ## Fixed inconsistent buyer/seller name+email visibility across records, 2026-09-19
 
 User caught this live: on BuyerDeposit (right after the seller
