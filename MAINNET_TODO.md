@@ -3,6 +3,28 @@
 Arc mainnet went live **September 16, 2026**. Step 1 details are now
 published — see below. Everything after step 1 still needs doing.
 
+## Truncated wallet addresses everywhere they're shown for confirmation, 2026-09-19
+
+User: full 42-char addresses aren't needed in most spots — just enough
+to confirm identity, "like big apps show it" (MetaMask/Etherscan-style
+`0xabc1...def0`), with the same copy button so the full value is still
+one click away.
+
+Added `frontend/src/utils/address.js` (`shortenAddress`). Applied to:
+`CreateEscrow.jsx` Buyer Information, `Profile.jsx` Connected Wallet,
+`BuyerDeposit.jsx`/`SellerAccept.jsx` Buyer/Seller wallet rows,
+`CircleWallet.jsx`'s header chip. Each `SummaryRow`/`InfoRow` gained a
+separate `copyValue` prop distinct from the displayed `value`, so the
+copy button always copies the full address even though only the short
+form is shown.
+
+Deliberately kept `CircleWallet.jsx`'s "Your deposit address" box
+(Receive tab) full-length — that one exists specifically so someone
+can send funds *to* it, and truncating an address you're handing
+someone to receive money would be a real footgun, not just a style
+choice. Real apps (Coinbase, MetaMask) don't truncate that particular
+screen either.
+
 ## Follow-up: email rows should always show, dash when empty, 2026-09-19
 
 User immediately caught the previous round's fix was still hiding the
