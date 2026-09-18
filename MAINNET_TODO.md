@@ -3,6 +3,19 @@
 Arc mainnet went live **September 16, 2026**. Step 1 details are now
 published — see below. Everything after step 1 still needs doing.
 
+## EscrowActive: removed a redundant status box, 2026-09-19
+
+Real screenshot: the green "Deposit confirmed on Arc Mainnet" box and
+the yellow "Funds Locked / USDC is held in the live smart contract
+until the seller confirms delivery" box right below it were saying
+close to the same thing back to back. Asked to keep the green box,
+move just the "Funds Locked" heading above it, and drop the box +
+paragraph below.
+
+Moved the (still status-colored, still switches to "Seller Confirmed
+Delivery" once delivered) heading above `TransactionProof`, removed
+the wrapping colored box and its descriptive paragraph.
+
 ## Found two records still missing the standard 3 credentials, 2026-09-19
 
 User clicked "Open Escrow" from a real Active Purchases card and
