@@ -3,6 +3,19 @@
 Arc mainnet went live **September 16, 2026**. Step 1 details are now
 published — see below. Everything after step 1 still needs doing.
 
+## Wallet dropdown now matches the pill's width exactly, 2026-09-19
+
+Real screenshot: the dropdown menu (Profile/Change Wallet/Disconnect
+Wallet) was a fixed `w-56`, visibly wider than the "Wallet:
+0xf0d2...1acb" pill that opens it. Changed both copies
+(`useWalletBadge.jsx`, `Home.jsx`) to `w-full` — since the dropdown's
+`relative` wrapper is a flex sibling of the pill in Navbar's flex row
+(no flex-grow), its natural width already equals the pill's width, so
+`w-full` makes the dropdown match exactly. "Disconnect Wallet" now
+wraps to two lines at that width, which is the expected tradeoff.
+Verified visually via `vite preview` on both Home.jsx's dashboard and
+a shared-hook page (Profile) — both align correctly.
+
 ## EscrowActive: removed a redundant status box, 2026-09-19
 
 Real screenshot: the green "Deposit confirmed on Arc Mainnet" box and
