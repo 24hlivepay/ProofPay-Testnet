@@ -3,6 +3,42 @@
 Arc mainnet went live **September 16, 2026**. Step 1 details are now
 published — see below. Everything after step 1 still needs doing.
 
+## ⏸️ Where we left off (2026-09-21, to ask Arc Studio tomorrow)
+
+1. **PR 1 (backend hardening) — waiting on the user.** Branch
+   `fix/cheap-hardening` (commit 6241ef2, 47 tests pass) is pushed but NOT
+   merged. To do: open the PR (github.com/24hlivepay/ProofPay-Mainnet/pull/new/fix/cheap-hardening),
+   test on the Vercel preview with TESTNET escrows only (preview shares the
+   production DATABASE_URL), then merge on GitHub. Merge PR 1 before PR 2.
+2. **Swap tab — ON HOLD (rejected for now).** Arc Studio built a Uniswap swap
+   tab. Official Arc docs (docs.arc.io/arc/references/contract-addresses) list
+   NO Uniswap, WETH or cirBTC on Arc Mainnet. Arc Studio's own on-chain check:
+   Permit2 (canonical) OK; cirBTC/WETH token contracts exist but only sourced
+   from an Aave governance page, not Circle; the "UniversalRouter"
+   (0x00000000151340...2C36) has an `owner()` (0x33F26c...51e8) which the real
+   Uniswap UniversalRouter does not, so it is probably a UniswapX reactor or
+   another contract; V3 Factory/Quoter unproven. Arc Studio reverted
+   everything (nothing was pushed to our repo). Do NOT add cirBTC/WETH to
+   mainnet escrowAssets.js. Revisit only if Uniswap lists Arc officially or
+   Circle ships a swap kit (App Kit swap).
+3. **Message to send Arc Studio tomorrow (user will send it):** agree to hold
+   swap; PR 1 is already applied and pushed by us (do not redo); next task
+   is PR 2 (auth) — send the design's open questions first, with agreed
+   answers: Circle wallets verified via userToken ownership (not signMessage),
+   EOAs via SIWE-style signature, JWT 2h bound to address+network+role,
+   verificationCode visible to the seller only, emails visible to
+   participants and admin only; no code until the plan is approved.
+4. **Working setup with Arc Studio:** main is protected (PR required, no
+   bypass). The user was moving toward giving Arc Studio a fine-grained token
+   (30 days, only ProofPay-Mainnet, Contents + Pull requests) via a
+   gh-token.txt file; not confirmed done. Until then patches come as zips
+   (toolbar download icon) and are applied here on a branch. Delete every
+   downloaded zip after use (Trash; user empties it).
+5. **Other open items:** PR 2/3/4 (auth, CORS), Neon branch for Preview DB,
+   Blob token "Needs Attention" (Config→Secret), independent contract audit,
+   README/docs still say testnet, userToken/encryptionKey stored in
+   localStorage (Circle recommends httpOnly cookies).
+
 ## Arc Studio security review + PR 1 branch pushed, 2026-09-21
 
 ProofPay was given to Arc Studio for review. Findings (verified against our
