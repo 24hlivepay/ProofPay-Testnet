@@ -3,6 +3,33 @@
 Arc mainnet went live **September 16, 2026**. Step 1 details are now
 published — see below. Everything after step 1 still needs doing.
 
+## Arc Studio security review + PR 1 branch pushed, 2026-09-21
+
+ProofPay was given to Arc Studio for review. Findings (verified against our
+code): dispute/admin endpoints trust an unsigned `wallet` value; /delivered
+had no state check; /release and /deposit trusted the caller; escrow IDs used
+Math.random; /api/wallet/connect never verifies its signature; verify-seller
+had no rate limit; GET /api/escrow/:id exposes emails.
+
+PR 1 (cheap hardening) went through 3 review rounds here (v3 accepted):
+on-chain status checks for delivered/release/deposit/resolved, verify-seller
+10-minute lockout (with an expiry-reset bug found in v2 and fixed),
+crypto-random IDs and codes, logic moved to backend/lib/hardening.js with
+node:test tests that need no env vars (47 pass). Pushed by me as branch
+`fix/cheap-hardening` (commit 6241ef2), NOT merged: PR link
+github.com/24hlivepay/ProofPay-Mainnet/pull/new/fix/cheap-hardening.
+Before merging: test on the Vercel preview with testnet escrows only
+(preview shares the production DATABASE_URL).
+
+Still open: PR 2/3 (signature/nonce auth, Circle userToken ownership check,
+email visibility), PR 4 (CORS). Circle skill note: userToken/encryptionKey
+should live in httpOnly cookies, ProofPay keeps them in localStorage.
+
+GitHub `main` is now protected by a ruleset (PR required, no bypass, no force
+push/delete), so direct pushes to main fail; work goes via branches + PR.
+Circle CLI + skills installed in the extracted Arc Studio project
+(~/Documents/proofpay_project_management_hub_a6oey0, CLI under ~/.npm-global).
+
 ## Vercel env check for storage, 2026-09-20 (read-only, via browser pane)
 
 Confirmed in the Vercel dashboard (project `proof-pay`): `DATABASE_URL`
