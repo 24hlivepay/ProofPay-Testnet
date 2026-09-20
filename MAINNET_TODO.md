@@ -3,6 +3,15 @@
 Arc mainnet went live **September 16, 2026**. Step 1 details are now
 published — see below. Everything after step 1 still needs doing.
 
+## Resolved records show the full conversation (collapsible), 2026-09-20
+
+After resolving, the admin's "past decisions" card and the buyer/seller
+dispute view now show the whole thread. `DisputeThread` got a
+`collapseAfter` prop: >3 messages shows the first 3 plus "See more (N
+more)" / "See less". Active disputes are unchanged (all messages).
+Files: `DisputeThread.jsx`, `AdminDisputes.jsx` (ResolvedCase),
+`DisputeResponse.jsx`. Not click-tested (no local Circle keys).
+
 ## Admin can now converse in a dispute without settling, 2026-09-20
 
 Gap: the admin's dispute card had one note box tied to one Confirm
