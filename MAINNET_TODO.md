@@ -3,6 +3,14 @@
 Arc mainnet went live **September 16, 2026**. Step 1 details are now
 published — see below. Everything after step 1 still needs doing.
 
+## Product / Service added to the last two summary boxes, 2026-09-20
+
+Screenshot of SellerVerification's Escrow Summary showed no product
+name. Audited every buyer/seller info box: BuyerDeposit, SellerAccept
+(both steps) and WaitingSeller already had it; SellerVerification and
+EscrowActive did not. Added a "Product / Service" row to both, so all
+summary boxes now carry it.
+
 ## Seller invite link had no email-wallet option, 2026-09-20
 
 User (a seller with no browser wallet) opened a buyer's invite link and
