@@ -3,6 +3,29 @@
 Arc mainnet went live **September 16, 2026**. Step 1 details are now
 published — see below. Everything after step 1 still needs doing.
 
+## Admin can now converse in a dispute without settling, 2026-09-20
+
+Gap: the admin's dispute card had one note box tied to one Confirm
+button that always released funds on-chain (and required a note). Asked
+for: conversation only, or release only, or release with conversation.
+
+Backend (`server.js`): `dispute.messages[]` (from admin/buyer/seller,
+text, sentAt; 200-message cap, 2000 chars, active disputes only) with
+`POST /api/admin/disputes/:id/message` (admin) and
+`POST /api/escrow/:id/dispute/message` (participants). The resolve
+endpoint no longer requires a note.
+
+Frontend: new `components/DisputeThread.jsx`. AdminDisputes shows the
+thread + "Send message (no payment released)"; the note field is now
+optional and Confirm is "Resolve and release payment". DisputeResponse
+(buyer/seller) shows the thread with a reply box while the dispute is
+active; an empty resolution note is no longer rendered.
+
+Needs backend redeploy. Not click-tested (no local Circle keys). Notes:
+messages have no notification (parties see them when they open the
+dispute page); existing disputes have no `messages` field and work fine
+(treated as empty). MyDisputes list does not show the thread.
+
 ## Stale Circle confirmation label on dispute (second occurrence), 2026-09-20
 
 After the allowlist fix, a seller's Open Dispute popup read "Confirm
