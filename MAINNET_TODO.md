@@ -3,6 +3,21 @@
 Arc mainnet went live **September 16, 2026**. Step 1 details are now
 published — see below. Everything after step 1 still needs doing.
 
+## Circle-wallet users couldn't open a dispute, 2026-09-20
+
+A seller on a Circle (email) wallet hit "This Circle contract operation
+is not allowed." on "Open dispute and freeze funds". Cause: the backend
+allowlist for `/api/circle/contract-execution` (`escrowFunctions` in
+`server.js`) only had createEscrow / confirmDelivery / releaseFunds /
+refund — `openDispute(string)` was never added, so any Circle-wallet
+dispute was rejected before reaching Circle. Pre-existing (testnet too),
+not a mainnet regression. Added `openDispute(string)`.
+
+Deliberately NOT added: `resolveDispute(string,uint256)` — admin-only and
+the admin resolves with an EOA. If admin ever uses a Circle wallet, add it
+then. Needs a backend redeploy on Vercel to take effect; not testable
+locally (no Circle keys).
+
 ## Product / Service added to the last two summary boxes, 2026-09-20
 
 Screenshot of SellerVerification's Escrow Summary showed no product
