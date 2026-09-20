@@ -3,6 +3,20 @@
 Arc mainnet went live **September 16, 2026**. Step 1 details are now
 published — see below. Everything after step 1 still needs doing.
 
+## Stale Circle confirmation label on dispute (second occurrence), 2026-09-20
+
+After the allowlist fix, a seller's Open Dispute popup read "Confirm
+Delivery ... 0 USDC" — `openDisputeOnChain` passed no `display`, so the
+shared Circle SDK reused confirmDelivery's copy (same singleton
+mechanism as the 2026-09-17 plain-transfer bug). Fixed: `openDisputeOnChain`
+takes `{side, name}` (Dispute.jsx derives it by comparing the connected
+wallet to `order.buyerWallet`) and shows "Open Dispute", "Dispute opened
+by the Seller (name)", funds frozen / none released. Also gave
+`refundOnChain` and `resolveDisputeOnChain` their own displays so no
+Circle contract call in `proofpayContract.js` is left without one.
+Rule going forward: every `executeCircleProofPay` call must pass a
+`display`. Not click-tested (no local Circle keys).
+
 ## Circle-wallet users couldn't open a dispute, 2026-09-20
 
 A seller on a Circle (email) wallet hit "This Circle contract operation
