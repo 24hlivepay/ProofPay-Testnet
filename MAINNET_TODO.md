@@ -3,6 +3,19 @@
 Arc mainnet went live **September 16, 2026**. Step 1 details are now
 published — see below. Everything after step 1 still needs doing.
 
+## Vercel env check for storage, 2026-09-20 (read-only, via browser pane)
+
+Confirmed in the Vercel dashboard (project `proof-pay`): `DATABASE_URL`
+is set for Production + Preview (Neon integration `proofpay-db`), so
+escrows/disputes/messages persist in Postgres, not `/tmp`.
+`BLOB_READ_WRITE_TOKEN` is set for Production/Preview/Development, so
+dispute evidence goes to Vercel Blob. Vercel flags the Blob token
+"Needs Attention": it is stored as type *Config* (value visible to
+anyone with project access) although it is a secret. Nothing changed.
+Optional hygiene: rotate Blob credentials and re-save as Secret.
+`DISPUTE_ADMIN_WALLET` (Prod/Preview Secret), `CIRCLE_API_KEY_MAINNET`
+(Secret) and `VITE_CIRCLE_APP_ID_MAINNET` are also present.
+
 ## Resolved records show the full conversation (collapsible), 2026-09-20
 
 After resolving, the admin's "past decisions" card and the buyer/seller
