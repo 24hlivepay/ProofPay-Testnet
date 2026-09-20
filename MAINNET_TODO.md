@@ -3,6 +3,23 @@
 Arc mainnet went live **September 16, 2026**. Step 1 details are now
 published — see below. Everything after step 1 still needs doing.
 
+## Seller invite link had no email-wallet option, 2026-09-20
+
+User (a seller with no browser wallet) opened a buyer's invite link and
+hit "MetaMask is not installed" with no alternative. Not a regression —
+a design gap since testnet: `SellerAccept.jsx` only called the EOA
+connect path, while Circle email login lived only on /login and always
+redirected to /dashboard afterward.
+
+Fix: the connect step now shows "Connect MetaMask / Rabby" plus "Sign in
+with Email (Circle wallet)". The email button stores
+`proofpay-post-login-route` (+ `proofpay-invite-resume`) in
+sessionStorage and goes to /login; `OtpVerification.jsx` now navigates to
+that route instead of /dashboard when set, and SellerAccept reopens at
+the review step. If a Circle session already exists it shows "Continue
+with Circle wallet (0x…)". Built + linted; not click-tested (needs
+Circle keys locally — same blocker as before).
+
 ## ⏸️ Where we left off (2026-09-19, stopped for the day)
 
 Mainnet has been live since 2026-09-17. Today's session covered a lot
