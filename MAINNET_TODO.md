@@ -5,11 +5,15 @@ published — see below. Everything after step 1 still needs doing.
 
 ## ⏸️ Where we left off (2026-09-21, to ask Arc Studio tomorrow)
 
-1. **PR 1 (backend hardening) — waiting on the user.** Branch
-   `fix/cheap-hardening` (commit 6241ef2, 47 tests pass) is pushed but NOT
-   merged. To do: open the PR (github.com/24hlivepay/ProofPay-Mainnet/pull/new/fix/cheap-hardening),
-   test on the Vercel preview with TESTNET escrows only (preview shares the
-   production DATABASE_URL), then merge on GitHub. Merge PR 1 before PR 2.
+1. **PR 1 (backend hardening) — MERGED 2026-09-21 (PR #1, squash commit
+   767de30).** Tested by the user on the Vercel preview (testnet) first; the
+   lockout test and the full escrow flow passed. Production deploy of 767de30
+   should follow automatically (not yet confirmed when this was written).
+   TODO: after it is live, one tiny mainnet smoke test (0.5-1 USDC, full
+   flow; do NOT run the lockout test on mainnet). Preview note: the Vercel
+   preview defaults to Arc Mainnet, and CIRCLE_API_KEY_MAINNET is
+   Production-only, so email login on a preview shows "malformed API key"
+   until you switch to Arc Testnet (expected, not a bug).
 2. **Swap tab — ON HOLD (rejected for now).** Arc Studio built a Uniswap swap
    tab. Official Arc docs (docs.arc.io/arc/references/contract-addresses) list
    NO Uniswap, WETH or cirBTC on Arc Mainnet. Arc Studio's own on-chain check:
@@ -28,7 +32,7 @@ published — see below. Everything after step 1 still needs doing.
    EOAs via SIWE-style signature, JWT 2h bound to address+network+role,
    verificationCode visible to the seller only, emails visible to
    participants and admin only; no code until the plan is approved.
-4. **Working setup with Arc Studio (decided 2026-09-21):** Arc Studio gets NO
+4. **Working setup with Arc Studio (decided 2026-09-21):** `gh` is installed and logged in on this Mac (24hlivepay; scopes repo, workflow, gist, read:org), so Claude can open PRs; merging waits for the user's test. Arc Studio gets NO
    GitHub token; the fine-grained token that was created was DELETED by the
    user. Arc Studio gives patches as zips (toolbar download icon); Claude
    applies them here on a branch, tests, and pushes the BRANCH only. `main`
