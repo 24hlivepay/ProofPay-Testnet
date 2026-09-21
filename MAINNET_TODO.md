@@ -12,11 +12,11 @@ cleanly, 87 tests pass with no env vars. I fixed 3 small things myself:
 hostOf() so a malformed FRONTEND_URL cannot crash boot, allow VERCEL_BRANCH_URL
 (previews are opened from the branch alias) and VERCEL_PROJECT_PRODUCTION_URL,
 `trust proxy` for the nonce rate limit, and SIWE message address must equal the
-signer. Pushed as branch `feat/session-auth`, PR #2
-(github.com/24hlivepay/ProofPay-Mainnet/pull/2), NOT merged. It changes no
-behaviour for users (no endpoint requires a token, frontend untouched).
-To do: test on the PR 2 preview (TESTNET: MetaMask login, Circle email login,
-one normal escrow), then merge. `SESSION_SECRET` (Secret, different value for
+signer. PR #2 (github.com/24hlivepay/ProofPay-Mainnet/pull/2) was tested by
+the user on the preview (testnet; MetaMask showed its normal 'unknown domain'
+warning for the preview URL, harmless) and MERGED 2026-09-22 (squash commit
+c0e0859). It changes no behaviour for users (no endpoint requires a token,
+frontend untouched). Production deploy of c0e0859 to be confirmed. `SESSION_SECRET` (Secret, different value for
 Production and Preview) is optional now, REQUIRED for PR 3.
 PR 3 must: make a missing SESSION_SECRET fail closed (not silently skip
 enforcement), send the token from the frontend, sanitize escrows (email only
