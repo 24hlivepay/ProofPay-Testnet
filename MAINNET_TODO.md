@@ -28,12 +28,13 @@ published — see below. Everything after step 1 still needs doing.
    EOAs via SIWE-style signature, JWT 2h bound to address+network+role,
    verificationCode visible to the seller only, emails visible to
    participants and admin only; no code until the plan is approved.
-4. **Working setup with Arc Studio:** main is protected (PR required, no
-   bypass). The user was moving toward giving Arc Studio a fine-grained token
-   (30 days, only ProofPay-Mainnet, Contents + Pull requests) via a
-   gh-token.txt file; not confirmed done. Until then patches come as zips
-   (toolbar download icon) and are applied here on a branch. Delete every
-   downloaded zip after use (Trash; user empties it).
+4. **Working setup with Arc Studio (decided 2026-09-21):** Arc Studio gets NO
+   GitHub token; the fine-grained token that was created was DELETED by the
+   user. Arc Studio gives patches as zips (toolbar download icon); Claude
+   applies them here on a branch, tests, and pushes the BRANCH only. `main`
+   is protected by a ruleset (PR required, empty bypass list), so merging is
+   the user's job on GitHub (Create PR -> test on the Vercel preview with
+   testnet escrows -> Merge). Delete every downloaded zip after use.
 5. **Other open items:** PR 2/3/4 (auth, CORS), Neon branch for Preview DB,
    Blob token "Needs Attention" (Config→Secret), independent contract audit,
    README/docs still say testnet, userToken/encryptionKey stored in
