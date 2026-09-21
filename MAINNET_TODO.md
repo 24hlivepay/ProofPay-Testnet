@@ -23,47 +23,46 @@ enforcement), send the token from the frontend, sanitize escrows (email only
 to participants/admin, verificationCode only to the seller), and handle
 Circle userToken expiry with a clear "sign in with email again" message.
 
-## ⏸️ Where we left off (2026-09-21, to ask Arc Studio tomorrow)
+## ⏸️ Where we left off (2026-09-22, stopped for the day)
 
-1. **PR 1 (backend hardening) — MERGED 2026-09-21 (PR #1, squash commit
-   767de30).** Tested by the user on the Vercel preview (testnet) first; the
-   lockout test and the full escrow flow passed. Production deploy of 767de30
-   went live on Production (deployment of 767de30 created 2026-09-21 18:52Z,
-   state success). The user then ran a regular mainnet escrow through to
-   Release Funds and it worked (mainnet smoke test passed). Do NOT run the
-   lockout test on mainnet. Preview note: the Vercel
-   preview defaults to Arc Mainnet, and CIRCLE_API_KEY_MAINNET is
-   Production-only, so email login on a preview shows "malformed API key"
-   until you switch to Arc Testnet (expected, not a bug).
-2. **Swap tab — ON HOLD (rejected for now).** Arc Studio built a Uniswap swap
-   tab. Official Arc docs (docs.arc.io/arc/references/contract-addresses) list
-   NO Uniswap, WETH or cirBTC on Arc Mainnet. Arc Studio's own on-chain check:
-   Permit2 (canonical) OK; cirBTC/WETH token contracts exist but only sourced
-   from an Aave governance page, not Circle; the "UniversalRouter"
-   (0x00000000151340...2C36) has an `owner()` (0x33F26c...51e8) which the real
-   Uniswap UniversalRouter does not, so it is probably a UniswapX reactor or
-   another contract; V3 Factory/Quoter unproven. Arc Studio reverted
-   everything (nothing was pushed to our repo). Do NOT add cirBTC/WETH to
-   mainnet escrowAssets.js. Revisit only if Uniswap lists Arc officially or
-   Circle ships a swap kit (App Kit swap).
-3. **Message to send Arc Studio tomorrow (user will send it):** agree to hold
-   swap; PR 1 is already applied and pushed by us (do not redo); next task
-   is PR 2 (auth) — send the design's open questions first, with agreed
-   answers: Circle wallets verified via userToken ownership (not signMessage),
-   EOAs via SIWE-style signature, JWT 2h bound to address+network+role,
-   verificationCode visible to the seller only, emails visible to
-   participants and admin only; no code until the plan is approved.
-4. **Working setup with Arc Studio (decided 2026-09-21):** `gh` is installed and logged in on this Mac (24hlivepay; scopes repo, workflow, gist, read:org), so Claude can open PRs; merging waits for the user's test. Arc Studio gets NO
-   GitHub token; the fine-grained token that was created was DELETED by the
-   user. Arc Studio gives patches as zips (toolbar download icon); Claude
-   applies them here on a branch, tests, and pushes the BRANCH only. `main`
-   is protected by a ruleset (PR required, empty bypass list), so merging is
-   the user's job on GitHub (Create PR -> test on the Vercel preview with
-   testnet escrows -> Merge). Delete every downloaded zip after use.
-5. **Other open items:** PR 2/3/4 (auth, CORS), Neon branch for Preview DB,
-   Blob token "Needs Attention" (Config→Secret), independent contract audit,
-   README/docs still say testnet, userToken/encryptionKey stored in
-   localStorage (Circle recommends httpOnly cookies).
+**Done and live/merged:** PR 1 (backend hardening, #1, 767de30, live in
+production, mainnet smoke test passed) and PR 2 (auth infrastructure, #2,
+c0e0859, merged, no user-visible change). Production deploy of c0e0859 was
+not yet confirmed when the user stopped (Vercel takes a few minutes; check
+proof-pay -> Deployments, or `gh api repos/24hlivepay/ProofPay-Mainnet/deployments?environment=Production`).
+
+**Next (tomorrow): PR 3 — the part that actually enforces auth.**
+1. User sets `SESSION_SECRET` in Vercel (Secret type, a long random string,
+   a DIFFERENT value for Production and Preview). Required for PR 3.
+2. Send Arc Studio the PR 3 plan request. PR 3 must: require the token on
+   dispute/admin/delivered/release endpoints; make a missing SESSION_SECRET
+   FAIL CLOSED (not silently skip enforcement); frontend signs a SIWE message
+   (nonce from /api/auth/nonce) for MetaMask/Rabby and uses the Circle
+   userToken path for email wallets; sanitize escrows (emails only to
+   participants/admin, verificationCode only to the seller); show a clear
+   "sign in again" banner on 401 and "Your Circle session has expired. Sign in
+   with email again." (Circle code 155104) without interrupting in-flight
+   on-chain actions; fix /api/wallet/connect legacy path removal only after the
+   frontend ships. Keep: no token for Arc Studio, patches come as zips.
+3. Test PR 3 on its Vercel preview on TESTNET first (MetaMask shows an
+   "unknown domain" warning on preview URLs: expected; profile is stored per
+   browser origin so it must be re-entered on each new preview link).
+
+**Workflow (settled):** Arc Studio gets no GitHub token. It gives a patch zip
+(toolbar download icon); Claude applies it on a scratch copy, reviews, runs
+`npm test` (clean env), fixes small issues, pushes a BRANCH, opens the PR with
+`gh` (installed and logged in on this Mac as 24hlivepay). `main` is protected
+(PR required, no bypass); the user tests the Vercel preview (testnet only,
+preview shares the production DATABASE_URL) and says OK, then Claude merges.
+Delete every downloaded zip after use (Trash; user empties it).
+
+**Still open, lower priority:** swap tab ON HOLD (no official Uniswap/WETH/
+cirBTC on Arc mainnet; that "UniversalRouter" has owner()); Neon branch for the
+Preview database; Blob token Config->Secret; independent contract audit;
+README/docs still say testnet; server-side profile storage (profile is
+localStorage per origin/wallet today); Circle userToken/encryptionKey in
+localStorage instead of httpOnly cookies; PR 4 (CORS: allow localhost,
+proofpay.online, FRONTEND_URL, deployment VERCEL_URL/branch URL).
 
 ## Arc Studio security review + PR 1 branch pushed, 2026-09-21
 
