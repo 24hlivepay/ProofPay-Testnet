@@ -8,9 +8,10 @@ published — see below. Everything after step 1 still needs doing.
 1. **PR 1 (backend hardening) — MERGED 2026-09-21 (PR #1, squash commit
    767de30).** Tested by the user on the Vercel preview (testnet) first; the
    lockout test and the full escrow flow passed. Production deploy of 767de30
-   should follow automatically (not yet confirmed when this was written).
-   TODO: after it is live, one tiny mainnet smoke test (0.5-1 USDC, full
-   flow; do NOT run the lockout test on mainnet). Preview note: the Vercel
+   went live on Production (deployment of 767de30 created 2026-09-21 18:52Z,
+   state success). The user then ran a regular mainnet escrow through to
+   Release Funds and it worked (mainnet smoke test passed). Do NOT run the
+   lockout test on mainnet. Preview note: the Vercel
    preview defaults to Arc Mainnet, and CIRCLE_API_KEY_MAINNET is
    Production-only, so email login on a preview shows "malformed API key"
    until you switch to Arc Testnet (expected, not a bug).
