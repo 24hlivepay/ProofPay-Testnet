@@ -3,6 +3,26 @@
 Arc mainnet went live **September 16, 2026**. Step 1 details are now
 published — see below. Everything after step 1 still needs doing.
 
+## PR 2 (auth infrastructure) opened, 2026-09-22
+
+Arc Studio's plan was reviewed (6 corrections: legacy connect shape must keep
+working, JWT has no buyer/seller role, SIWE domain allowlist, nonce rate
+limit/cleanup, HS256 pin, Circle expiry error) and its patch reviewed: applies
+cleanly, 87 tests pass with no env vars. I fixed 3 small things myself:
+hostOf() so a malformed FRONTEND_URL cannot crash boot, allow VERCEL_BRANCH_URL
+(previews are opened from the branch alias) and VERCEL_PROJECT_PRODUCTION_URL,
+`trust proxy` for the nonce rate limit, and SIWE message address must equal the
+signer. Pushed as branch `feat/session-auth`, PR #2
+(github.com/24hlivepay/ProofPay-Mainnet/pull/2), NOT merged. It changes no
+behaviour for users (no endpoint requires a token, frontend untouched).
+To do: test on the PR 2 preview (TESTNET: MetaMask login, Circle email login,
+one normal escrow), then merge. `SESSION_SECRET` (Secret, different value for
+Production and Preview) is optional now, REQUIRED for PR 3.
+PR 3 must: make a missing SESSION_SECRET fail closed (not silently skip
+enforcement), send the token from the frontend, sanitize escrows (email only
+to participants/admin, verificationCode only to the seller), and handle
+Circle userToken expiry with a clear "sign in with email again" message.
+
 ## ⏸️ Where we left off (2026-09-21, to ask Arc Studio tomorrow)
 
 1. **PR 1 (backend hardening) — MERGED 2026-09-21 (PR #1, squash commit
