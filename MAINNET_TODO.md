@@ -32,7 +32,9 @@ See CONTRACTS.md.
 - **Item 1 (2 MB limit): DONE.** 10 MB per file, direct upload to storage; user tested a 7.6 MB file live.
 - **Item 2 (V2 on mainnet): DONE.** V2 USDC/EURC live on mainnet, v1 mainnet PAUSED (see CONTRACTS.md). Independent audit still not done.
 - **Item 3 (auth): mostly DONE.** `SESSION_SECRET` is set. **PR #34 (live):** `GET /api/escrows` now needs a sign-in and returns only the caller's own deals, sanitized (before: anyone could list every deal incl. verification codes and emails, both networks); `POST /api/escrow` copies only allowed fields. **PR #35 (live):** lists are newest activity first (a dispute-settled deal was showing below older ones). Old tabs with an expired login show empty lists until the user signs in again.
-- **Still open:** V2 audit-ready package / independent audit; explorer source verification of V2; delete stale Vercel env vars (`VITE_EURC_ESCROW_ADDRESS`, `VITE_CIRBTC_ESCROW_ADDRESS`, `VITE_MAINNET_*`); optional highlight of @mentions inside statement/resolution boxes; `POST /api/escrow` is still unauthenticated (buyer wallet comes from the body).
+- **Audit package DONE:** `foundry/AUDIT_PACKAGE.md` in the code repo (PR #36 merged). The independent audit itself is for the user to arrange.
+- **Vercel env vars checked:** the old address vars are already gone; the remaining `VITE_*` ones are all still read by the app (`VITE_CIRCLE_CLIENT_KEY` is unused and harmless).
+- **Still open:** independent audit; explorer source verification of V2; delete stale Vercel env vars (`VITE_EURC_ESCROW_ADDRESS`, `VITE_CIRBTC_ESCROW_ADDRESS`, `VITE_MAINNET_*`); optional highlight of @mentions inside statement/resolution boxes; `POST /api/escrow` is still unauthenticated (buyer wallet comes from the body).
 
 ## Session summary 2026-09-26: what is live now, and what is still open
 
