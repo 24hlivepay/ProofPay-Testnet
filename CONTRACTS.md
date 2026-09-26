@@ -3,7 +3,7 @@
 Single place for every ProofPay escrow contract, old and new: addresses, deploy
 transactions, what changed, what is live, and what is still open. Keep this file
 updated whenever a contract is deployed, retired or its config changes.
-Last updated: 2026-09-26.
+Last updated: 2026-09-26 (evening).
 
 Related files: `MAINNET_TODO.md` (running log of decisions and bug fixes),
 code repo `~/proof/ProofPay-Mainnet` (`foundry/src`, `foundry/test`,
@@ -58,9 +58,9 @@ Balances read 2026-09-26: mainnet 5.83 USDC, testnet 151.87 USDC.
 |---|---|---|---|---|---|
 | Mainnet | USDC | `0x626B2731A11B39A782992B57ED102012b607BC79` | `0x171a47b74aa8cda0369ac240afb6374bb014d6ee6d37d13d34f6efeb9589aa82` | 21188708 | LIVE, in use by the app |
 | Mainnet | EURC | `0xF6f0178e40dbF82D79e7E90a9b07AB0f32b862C0` | `0x6e3fe0bad04c9ec3fffa78000a5051b077864580d5cfc5b9e901cb5067cb4dce` | 21188797 | LIVE, in use by the app |
-| Testnet | USDC | `0xCd0f43E573899809ff96C560439570A760698C9a` | `0x79e8933c8df6707c0f5a91fc3f0e162f270100eb4514994d6d8536901dfe3f73` | 53590676 | in use until V2 is wired in |
-| Testnet | EURC | `0xa4322D8ba3E040A3028FD6ABaC3c6a5625ed4ca7` | not recorded here | n/a | in use until V2 is wired in |
-| Testnet | cirBTC | `0x8bfeD6F70Eb595946543b192b6E63d75A0bBEf4B` | not recorded here | n/a | in use until V2 is wired in |
+| Testnet | USDC | `0xCd0f43E573899809ff96C560439570A760698C9a` | `0x79e8933c8df6707c0f5a91fc3f0e162f270100eb4514994d6d8536901dfe3f73` | 53590676 | retired from the app by PR #21 (after merge). No `pause()` exists on it |
+| Testnet | EURC | `0xa4322D8ba3E040A3028FD6ABaC3c6a5625ed4ca7` | not recorded here | n/a | retired from the app by PR #21 (after merge). No `pause()` exists on it |
+| Testnet | cirBTC | `0x8bfeD6F70Eb595946543b192b6E63d75A0bBEf4B` | not recorded here | n/a | retired from the app by PR #21 (after merge). No `pause()` exists on it |
 
 On-chain check 2026-09-26: mainnet USDC and EURC v1 both return the expected
 token from `usdc()`, `owner()` is the deployer above, `paused()` is false.
@@ -89,8 +89,8 @@ Exactly v1 with two changes:
 
 | Network | Token | Address | Deploy tx | Block | Status |
 |---|---|---|---|---|---|
-| Testnet | USDC | `0xbf28D1d4cb480DDAc52c23670aFECA94D4d719a1` | `0xe89ec93681f74ed0e0ffb7fe6368981c106251c7fa0110aa289420f9d299e7e5` | 64079701 | DEPLOYED 2026-09-26, not yet wired into the app |
-| Testnet | EURC | `0x7117B300A01C969082DE898F1B1f699F6e8188B3` | `0x5d6aec739ba0f8e0d3fcae397eed1ed71737a4b64e452ec3dd68c9fbaedb83fb` | 64079701 | DEPLOYED 2026-09-26, not yet wired into the app |
+| Testnet | USDC | `0xbf28D1d4cb480DDAc52c23670aFECA94D4d719a1` | `0xe89ec93681f74ed0e0ffb7fe6368981c106251c7fa0110aa289420f9d299e7e5` | 64079701 | DEPLOYED 2026-09-26. Wired into the app by PR #21 (open, not merged) |
+| Testnet | EURC | `0x7117B300A01C969082DE898F1B1f699F6e8188B3` | `0x5d6aec739ba0f8e0d3fcae397eed1ed71737a4b64e452ec3dd68c9fbaedb83fb` | 64079701 | DEPLOYED 2026-09-26. Wired into the app by PR #21 (open, not merged) |
 | Mainnet | USDC | not deployed | | | waits for testnet flow test + audit |
 | Mainnet | EURC | not deployed | | | waits for testnet flow test + audit |
 
@@ -136,13 +136,37 @@ the deploy script; 20 older). A control run showed the same refund call succeeds
 
 ## What is live today (2026-09-26)
 
-- App on mainnet: v1 USDC and v1 EURC.
-- App on testnet: v1 USDC, EURC and cirBTC.
-- V2 exists on testnet only, unwired.
+- App on mainnet: v1 USDC and v1 EURC. Both hold 0 tokens (read from the chain
+  2026-09-26), so no funds are locked there.
+- App on testnet: still v1 USDC, EURC and cirBTC until PR #21 is merged.
+- V2 exists on testnet only. PR #21 wires it in (testnet only) and drops cirBTC
+  from testnet (its v1 escrow is retired, there is no V2 cirBTC escrow).
+
+## Retiring the v1 contracts
+
+- **Testnet v1** (USDC, EURC, cirBTC): they have NO `pause()` (deployed before
+  it was added), so they cannot be paused. Retiring them = removing them from the
+  app config, which PR #21 does. Escrows created on them can no longer be
+  operated from the app (the frontend always uses the configured address).
+- **Mainnet v1** (USDC, EURC): they do have `pause()`. `foundry/script/PauseV1Escrows.s.sol`
+  (mainnet only, dry run passed, PR #20) pauses both so nothing new can be created
+  on them. Pausing does not touch existing escrows. Needs the owner's signature.
+  Do it when V2 goes live on mainnet, in the same window.
+
+## Admin pause / resume in the dashboard (PR #21)
+
+New "Contracts" tab, URL `<site>/#/admin/contracts` (the app uses a hash router).
+Per escrow contract of the current network: address, on-chain owner, paused or
+not (live from the chain), and a Pause / Resume button. It sends `pause()` /
+`unpause()` from the admin's MetaMask/Rabby wallet, only if that wallet is the
+contract's on-chain owner; Circle email wallets are refused with a message.
+Pause blocks NEW escrows only. Works on v1 mainnet too (same functions).
+Not written to the admin audit log (the on-chain transaction is the record).
+The pause transaction itself has not been tested yet: it needs the admin wallet.
 
 ## Next steps, in order (all need the owner)
 
-1. Wire the V2 testnet addresses into the app config on a branch (testnet only) and test the full flow on the Vercel preview.
+1. PR #21 (wires V2 into testnet + admin Pause/Resume tab): test the full flow and the pause/resume on its Vercel preview, then merge.
 2. Independent audit of V2.
 3. Deploy V2 on mainnet with the same script (dry run first), verify on the explorer, update this file.
 4. Point new mainnet escrows at V2. Escrows already funded on v1 finish on v1.
