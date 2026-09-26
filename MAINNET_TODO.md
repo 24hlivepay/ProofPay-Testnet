@@ -15,8 +15,10 @@ The owner ran `DeployV2Escrows.s.sol` on Arc mainnet: USDC `0xbA8cf9bE18DE912dC9
 EURC `0x7894E539a16b0D1aE272BE4ebF998353C6E15C86` (block 22880209, ~0.0997 USDC gas). Checked on chain
 (read only): expected code, owner = deployer, right tokens, not paused, no `refund()`. **PR #31** (open) points
 the app's mainnet config at them and drops the v1 mainnet escrows and the `VITE_MAINNET_*_ESCROW_ADDRESS`
-overrides. After #31 is merged: the owner runs `PauseV1Escrows.s.sol` on mainnet. Still NOT done: independent
-audit of V2, explorer source verification. See CONTRACTS.md.
+overrides. **PR #31 merged and live** (deploy c82910d). The owner then ran `PauseV1Escrows.s.sol`: both v1 mainnet
+escrows are paused (block 22880961, checked on chain), V2 is not paused, v1 hold 0 tokens. Still NOT done: independent
+audit of V2, explorer source verification of the V2 contracts. Old PR #19 (dead refund code in the app) is still open.
+See CONTRACTS.md.
 
 ## Session summary 2026-09-26: what is live now, and what is still open
 

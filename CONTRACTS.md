@@ -56,8 +56,8 @@ Balances read 2026-09-26: mainnet 5.83 USDC, testnet 151.87 USDC.
 
 | Network | Token | Address | Deploy tx | Block | Status |
 |---|---|---|---|---|---|
-| Mainnet | USDC | `0x626B2731A11B39A782992B57ED102012b607BC79` | `0x171a47b74aa8cda0369ac240afb6374bb014d6ee6d37d13d34f6efeb9589aa82` | 21188708 | LIVE, in use by the app |
-| Mainnet | EURC | `0xF6f0178e40dbF82D79e7E90a9b07AB0f32b862C0` | `0x6e3fe0bad04c9ec3fffa78000a5051b077864580d5cfc5b9e901cb5067cb4dce` | 21188797 | LIVE, in use by the app |
+| Mainnet | USDC | `0x626B2731A11B39A782992B57ED102012b607BC79` | `0x171a47b74aa8cda0369ac240afb6374bb014d6ee6d37d13d34f6efeb9589aa82` | 21188708 | RETIRED and PAUSED (2026-09-26, block 22880961, tx `0x94986e62db41c6c98bcdae0bdebb62fe3955f1c26ffbbfce16ecb9e36a7c0ac0`). Held 0 tokens |
+| Mainnet | EURC | `0xF6f0178e40dbF82D79e7E90a9b07AB0f32b862C0` | `0x6e3fe0bad04c9ec3fffa78000a5051b077864580d5cfc5b9e901cb5067cb4dce` | 21188797 | RETIRED and PAUSED (2026-09-26, block 22880961, tx `0x0d94ddec105d71f00faf4b3cfd03dfa3bbdf8c624d4e8bdae2d5d315957f8428`). Held 0 tokens |
 | Testnet | USDC | `0xCd0f43E573899809ff96C560439570A760698C9a` | `0x79e8933c8df6707c0f5a91fc3f0e162f270100eb4514994d6d8536901dfe3f73` | 53590676 | retired from the app by PR #21 (after merge). No `pause()` exists on it |
 | Testnet | EURC | `0xa4322D8ba3E040A3028FD6ABaC3c6a5625ed4ca7` | not recorded here | n/a | retired from the app by PR #21 (after merge). No `pause()` exists on it |
 | Testnet | cirBTC | `0x8bfeD6F70Eb595946543b192b6E63d75A0bBEf4B` | not recorded here | n/a | retired from the app by PR #21 (after merge). No `pause()` exists on it |
@@ -91,8 +91,8 @@ Exactly v1 with two changes:
 |---|---|---|---|---|---|
 | Testnet | USDC | `0xbf28D1d4cb480DDAc52c23670aFECA94D4d719a1` | `0xe89ec93681f74ed0e0ffb7fe6368981c106251c7fa0110aa289420f9d299e7e5` | 64079701 | DEPLOYED 2026-09-26. Wired into the app by PR #21 (open, not merged) |
 | Testnet | EURC | `0x7117B300A01C969082DE898F1B1f699F6e8188B3` | `0x5d6aec739ba0f8e0d3fcae397eed1ed71737a4b64e452ec3dd68c9fbaedb83fb` | 64079701 | DEPLOYED 2026-09-26. Wired into the app by PR #21 (open, not merged) |
-| Mainnet | USDC | `0xbA8cf9bE18DE912dC98a6422906b1D8F0e56F76B` | `0x145e96c4ba7857404a56a57d7a3a1c31ede58101055224d97598d8c8b3f994e4` | 22880209 | DEPLOYED 2026-09-26 by the owner. Wired into the app by PR #31 (open until merged) |
-| Mainnet | EURC | `0x7894E539a16b0D1aE272BE4ebF998353C6E15C86` | `0x5e7ff5b11194d10616e9a4da869197ddea39c38393b76c9b28295c7545daef2a` | 22880209 | DEPLOYED 2026-09-26 by the owner. Wired into the app by PR #31 (open until merged) |
+| Mainnet | USDC | `0xbA8cf9bE18DE912dC98a6422906b1D8F0e56F76B` | `0x145e96c4ba7857404a56a57d7a3a1c31ede58101055224d97598d8c8b3f994e4` | 22880209 | DEPLOYED 2026-09-26 by the owner. LIVE in the app since PR #31 (merged 2026-09-26) |
+| Mainnet | EURC | `0x7894E539a16b0D1aE272BE4ebF998353C6E15C86` | `0x5e7ff5b11194d10616e9a4da869197ddea39c38393b76c9b28295c7545daef2a` | 22880209 | DEPLOYED 2026-09-26 by the owner. LIVE in the app since PR #31 (merged 2026-09-26) |
 
 Deployed with `foundry/script/DeployV2Escrows.s.sol` from the deployer wallet
 (gas paid 0.1433 USDC for both). On-chain check 2026-09-26, both testnet contracts:
@@ -142,8 +142,7 @@ the deploy script; 20 older). A control run showed the same refund call succeeds
 
 ## What is live today (2026-09-26)
 
-- App on mainnet: v1 USDC and v1 EURC until PR #31 is merged, then V2. Both v1 hold 0 tokens
-  (read from the chain 2026-09-26), so no funds are locked there.
+- App on mainnet: **V2 USDC and V2 EURC** (PR #31). The v1 mainnet escrows are retired and paused and held 0 tokens.
 - App on testnet: still v1 USDC, EURC and cirBTC until PR #21 is merged.
 - V2 exists on testnet only. PR #21 wires it in (testnet only) and drops cirBTC
   from testnet (its v1 escrow is retired, there is no V2 cirBTC escrow).
@@ -172,9 +171,8 @@ The pause transaction itself has not been tested yet: it needs the admin wallet.
 
 ## Next steps, in order (all need the owner)
 
-0. Mainnet V2 is deployed (above). Merge PR #31 (the app then uses it for new mainnet escrows), then
-   run `PauseV1Escrows.s.sol` on mainnet (owner signs) so nothing new can be created on the v1 mainnet
-   escrows. Any mainnet deal created on v1 but not funded before the switch must be created again.
+0. DONE 2026-09-26: mainnet V2 deployed, PR #31 merged (app uses it), v1 mainnet escrows paused. Any
+   mainnet deal created on v1 but not funded before the switch must be created again.
 
 1. PR #21 (wires V2 into testnet + admin Pause/Resume tab): test the full flow and the pause/resume on its Vercel preview, then merge.
 2. Independent audit of V2.
