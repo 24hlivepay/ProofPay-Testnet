@@ -9,6 +9,13 @@ published — see below. Everything after step 1 still needs doing.
 > `0x7117B300A01C969082DE898F1B1f699F6e8188B3`. PR #21 wires them into the app
 > (testnet only) and adds an admin Pause/Resume "Contracts" tab; open, not merged.**
 
+## Tested by the user 2026-09-26 (late): mainnet end to end up to a dispute
+
+The user ran the flow on Arc mainnet with the V2 contracts and the live app (deal, deposit, delivery, dispute with
+messages and tags, admin resolution note) and reported everything worked. Merged and live since: #31 (mainnet
+on V2), #32 (@tags in the Open dispute and reply forms, DealDocuments never blanks a page), #33 (@tags in the
+admin resolution note). Not confirmed by the user yet: the 7.6 MB direct-to-storage upload (PR #30).
+
 ## Mainnet V2 deployed, 2026-09-26 (evening)
 
 The owner ran `DeployV2Escrows.s.sol` on Arc mainnet: USDC `0xbA8cf9bE18DE912dC98a6422906b1D8F0e56F76B`,
