@@ -9,6 +9,43 @@ published — see below. Everything after step 1 still needs doing.
 > `0x7117B300A01C969082DE898F1B1f699F6e8188B3`. PR #21 wires them into the app
 > (testnet only) and adds an admin Pause/Resume "Contracts" tab; open, not merged.**
 
+## Session summary 2026-09-26: what is live now, and what is still open
+
+**Live on proofpay.online (all merged, deployed, checked on the live site):**
+- #19-#21 area: testnet uses ProofPayEscrowV2 (no buyer refund, two-step owner), admin
+  Contracts tab (pause/resume). #22 admin dispute proof inside the party's box.
+  #23 seller reply box + @tags before replying. #24-#29 deal documents.
+- **Deal documents (final behaviour):** buyer attaches agreement/screenshots when creating
+  a deal (files upload automatically after Create Escrow); the pinned seller sees them on
+  the review page (read only) and can add their own after accepting and later from inside
+  the order record; both parties' files show on the deal pages, in every order record
+  (Pending/Active/Completed/Cancelled, "View agreement & proof") and on the dispute case
+  page. Up to 5 files each, JPG/PNG/WEBP/PDF, 2 MB each. **The admin has no access, ever**
+  (user decision). A party can remove ONLY their own file while the deal is open; the stored
+  copy is deleted but a marker ("removed by buyer on <date>") stays visible to both.
+  User confirmed remove + re-upload works on live testnet (real Vercel Blob delete).
+- Root cause found for "documents section not showing": `GET /api/escrow/:id` treats an
+  expired 2 h token as anonymous and returns 200 WITHOUT `documents`. Fixed with the
+  authenticated `GET /api/escrow/:id/documents` (401 -> "Sign in to view documents").
+  Same trap exists for any other section that relies on the public escrow route.
+
+**Open, decisions or work for the user (nothing here is blocking testnet):**
+1. **2 MB file limit** (server request-size limit; files travel as base64). Real agreements
+   and bank statements are 5-7 MB. Raising it properly = upload straight to storage
+   (signed upload) instead of through the API. Not started; needs a decision.
+2. **V2 on mainnet is NOT deployed.** Needs: full testnet flow test, independent audit,
+   deploy with `foundry/script/DeployV2Escrows.s.sol` (owner signs), then pause the v1
+   mainnet escrows with `PauseV1Escrows.s.sol`. Mainnet v1 still has the buyer-only
+   `refund()` (contracts are immutable; the app never offers it, PR #19 removes the dead
+   code and is still open). See CONTRACTS.md.
+3. **PR 3 (auth enforcement) still open:** `GET /api/escrows` is unauthenticated and still
+   returns emails and the verification code; `POST /api/escrow` builds the record from
+   `req.body`. `SESSION_SECRET` must be set in Vercel (Secret, different for Production and
+   Preview). Independent contract audit not done.
+4. Delete `VITE_EURC_ESCROW_ADDRESS` / `VITE_CIRBTC_ESCROW_ADDRESS` from Vercel if set (no
+   longer read). Testnet has no cirBTC escrow now.
+5. Pending review: user's Arc House posts (email wallet address difference; agents; StableFX).
+
 ## Dispute fixes + deal documents, 2026-09-26 (testnet feedback)
 
 - **#22 merged + live:** on the admin dispute page each party's proof now shows
