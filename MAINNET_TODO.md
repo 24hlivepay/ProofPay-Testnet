@@ -3,6 +3,11 @@
 Arc mainnet went live **September 16, 2026**. Step 1 details are now
 published — see below. Everything after step 1 still needs doing.
 
+> **All contract addresses, deploy txs and the v1 vs V2 differences live in
+> `CONTRACTS.md` (same folder). V2 is deployed on TESTNET only (2026-09-26):
+> USDC `0xbf28D1d4cb480DDAc52c23670aFECA94D4d719a1`, EURC
+> `0x7117B300A01C969082DE898F1B1f699F6e8188B3`; not wired into the app yet.**
+
 ## Buyer self-refund path removed from the app, PR #19, 2026-09-26
 
 Intended flow (user's design, restated 2026-09-26): the buyer releases after
