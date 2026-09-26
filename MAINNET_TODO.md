@@ -9,6 +9,29 @@ published — see below. Everything after step 1 still needs doing.
 > `0x7117B300A01C969082DE898F1B1f699F6e8188B3`. PR #21 wires them into the app
 > (testnet only) and adds an admin Pause/Resume "Contracts" tab; open, not merged.**
 
+## Dispute fixes + deal documents, 2026-09-26 (testnet feedback)
+
+- **#22 merged + live:** on the admin dispute page each party's proof now shows
+  inside that party's statement box (was a separate "Private evidence" list).
+- **#23 open:** seller sees the conversation reply box and the @tag buttons before
+  submitting the formal response (only the responder page hid them; backend already
+  allowed messaging). Resolved disputes still show no reply box.
+- **#24 open: deal documents.** Buyer attaches a signed agreement / screenshots when
+  creating a deal (picker under the description); the pinned seller can add their own
+  before or when accepting; both see each other's; up to 5 each, JPG/PNG/WEBP/PDF, 2 MB.
+  **Only the buyer and the seller can open them. The ADMIN HAS NO ACCESS, before or
+  after a dispute** (user decision: these are their secrets); in a dispute each side
+  re-attaches what it wants the admin to see via the dispute's own evidence/messages.
+  Server-enforced (`backend/lib/documents.js`, `sanitizeEscrow`, two new routes);
+  175 backend tests, 32/32 local integration checks, browser-tested. NOT tested with a
+  real wallet: create-then-upload. Uploads go through the authenticated
+  `POST /api/escrow/:id/documents`, one file per request, not through the
+  unauthenticated create route.
+- **Known gaps (PR 3 territory, unchanged):** `GET /api/escrows` is unauthenticated and
+  still returns emails and the verification code; `POST /api/escrow` builds the record
+  from `req.body` (a client can set fields such as `dispute`). #24 only keeps
+  `documents` out of the list and forces `documents: []` at creation.
+
 ## Buyer self-refund path removed from the app, PR #19, 2026-09-26
 
 Intended flow (user's design, restated 2026-09-26): the buyer releases after
