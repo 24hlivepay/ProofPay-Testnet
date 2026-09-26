@@ -99,13 +99,20 @@ Deployed with `foundry/script/DeployV2Escrows.s.sol` from the deployer wallet
 code present, `owner()` = the deployer, `pendingOwner()` = zero address,
 `usdc()` = the right token (USDC `0x3600…0000` / EURC `0x89B5…D72a`),
 `paused()` = false, and a call to `refund(string)` reverts (the function does not exist).
-Explorer source verification: NOT verified yet (checked, `is_verified` false).
+Explorer source verification: DONE 2026-09-26, see below.
 
 Mainnet V2 (2026-09-26): deployed with the same script from the deployer wallet, total paid ~0.0997
 native USDC. Read-only checks on chain: code identical to the tested source apart from the token-address
 slot, `owner()` = the deployer `0xD979...91AC`, `pendingOwner()` = zero, right token (USDC `0x3600...0000` /
-EURC `0xbEf5...21c1`), not paused, `refund(string)` does not exist. The mainnet explorer source
-verification has not been done. The v1 mainnet escrows held 0 tokens on 2026-09-26.
+EURC `0xbEf5...21c1`), not paused, `refund(string)` does not exist. Explorer source verification: DONE 2026-09-26, see below. The v1 mainnet escrows held 0 tokens on 2026-09-26.
+
+**Explorer source verification (2026-09-26): all four V2 contracts show "exact match"** on the Blockscout explorers
+(explorer.arc.io and testnet.arcscan.app), file path `src/ProofPayEscrowV2.sol`, solc `v0.8.28+commit.7893614a`,
+EVM `prague`, optimizer off. Mainnet USDC was verified by hand with the Standard JSON input (single-file form only gave a
+"partial match" because it renames the file, which changes the metadata hash); the other three were then matched
+automatically by the Blockscout Bytecode Database. To repeat: `forge verify-contract <addr> src/ProofPayEscrowV2.sol:ProofPayEscrowV2 --show-standard-json-input`
+in `foundry/`, upload that JSON. On the explorer every contract is named `ProofPayEscrowV2`; the token is only visible
+as constructor argument `usdcAddress` (or via `usdc()` in Read contract). The source header still says "NOT YET DEPLOYED"; do not edit it, that would break the exact match.
 
 Tests: `forge test` in `foundry/` = 59 pass (37 in `ProofPayEscrowV2.t.sol`
 including that `refund` does not exist, that buyer and seller cannot move funds
