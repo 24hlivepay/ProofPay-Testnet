@@ -36,7 +36,8 @@ See CONTRACTS.md.
 - **Vercel env vars checked:** the old address vars are already gone; the remaining `VITE_*` ones are all still read by the app (`VITE_CIRCLE_CLIENT_KEY` is unused and harmless).
 - **Explorer source verification DONE:** all 4 V2 contracts (mainnet + testnet, USDC + EURC) show exact match (details in CONTRACTS.md).
 - **PR #37 (live):** `POST /api/escrow` now needs a sign-in and the buyer is the token's address (was public, buyer taken from the body). Live check: anonymous create, list and health all as expected (401 / 401 / ok). User still to test creating a deal on the live site.
-- **Still open:** independent audit; optional highlight of @mentions inside statement/resolution boxes.
+- **PR #38 (live):** @mentions are highlighted everywhere in disputes (claim, responses, admin decision note, thread): buyer green, seller red, ProofPay admin purple.
+- **Still open:** only the independent audit (for the user to arrange; package in `foundry/AUDIT_PACKAGE.md`).
 
 ## Session summary 2026-09-26: what is live now, and what is still open
 
