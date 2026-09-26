@@ -50,6 +50,23 @@ README documents the rule ("nobody refunds themselves").
 Rule enforced: after deposit, funds leave only via buyer `releaseFunds` after
 seller `confirmDelivery`, or admin `resolveDispute` after `openDispute`.
 
+Deploy script (added to draft PR #20): `foundry/script/DeployV2Escrows.s.sol`
+deploys BOTH V2 contracts (USDC + EURC; a contract holds one token, set in its
+constructor, same as v1) on whichever Arc network the RPC points at. It refuses
+any chain except 5042 / 5042002, checks each token (code exists, decimals 6,
+symbol) and checks the result. Read-only dry runs passed on both live networks
+(nothing sent). 59 forge tests pass. Est. gas ~6.5M (about 0.1-0.3 USDC).
+  Dry run:  `forge script script/DeployV2Escrows.s.sol --rpc-url <RPC>`
+  Deploy:   same plus `--account proofpay-deployer --sender <deployer> --broadcast`
+  (testnet RPC https://rpc.testnet.arc.network, mainnet https://rpc.mainnet.arc.io)
+
+**Backend rule that limits the owner handover:** `/api/admin/.../resolved`
+requires the resolveDispute tx `from` to equal `DISPUTE_ADMIN_WALLET`, and admin
+login is a wallet signature. So the V2 owner MUST be the same EOA as
+`DISPUTE_ADMIN_WALLET` (deploy V2 from that wallet). Handing ownership to a
+multisig needs a backend change first, or the admin flow will reject it. New
+escrows store their own contract address, so v1 escrows keep working.
+
 **Not done / next, all user decisions:**
 1. Deploy V2 (needs the owner wallet to sign; Claude never signs): testnet
    first, full flow test, then mainnet; verify on explorer; update contract
