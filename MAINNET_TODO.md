@@ -3,6 +3,34 @@
 Arc mainnet went live **September 16, 2026**. Step 1 details are now
 published — see below. Everything after step 1 still needs doing.
 
+## Buyer self-refund path removed from the app, PR #19, 2026-09-26
+
+Intended flow (user's design, restated 2026-09-26): the buyer releases after
+delivery; if the two sides cannot agree either can open a dispute, funds
+freeze, and ONLY the admin decides (release, refund or split via
+`resolveDispute`). A buyer refunding themselves is not part of the design and
+the UI never had a button for it.
+
+Found: the contract's `refund()` (buyer-only, status Funded, i.e. before the
+seller confirms delivery) exists, plus dead app code that could call it:
+`refundOnChain()` (never called by any page), the `refund` ABI entry, the
+`refund(string)` entry in the backend Circle allowlist (so an email-wallet
+buyer could call it through the API), and a placeholder `/refund` page that said
+"Refund request has been submitted" without sending anything. PR #19 (branch
+`fix/remove-buyer-self-refund`, opened, NOT merged) removes all of those plus
+the landing line saying refund is available. Build OK, backend 155/155 tests
+pass, not click-tested. Needs the user's test on the Vercel preview (testnet),
+then merge.
+
+**Still open (cannot fix in the app):** the deployed mainnet and testnet
+contracts still contain `refund()` and they are immutable, so anyone calling
+the contract directly (explorer or their own wallet) can still self-refund
+while status is Funded. Closing it needs a NEW escrow contract without
+`refund()` (same migration as the immutable-`owner` finding in section 3).
+Do not edit `foundry/src/ProofPayEscrow.sol` in place: it must match what is
+deployed and verified. Related: `foundry/test/ProofPayEscrow.t.sol` has
+`testBuyerCanRefundBeforeDelivery`, which would go with a new contract.
+
 ## PR 2 (auth infrastructure) opened, 2026-09-22
 
 Arc Studio's plan was reviewed (6 corrections: legacy connect shape must keep
