@@ -35,7 +35,8 @@ See CONTRACTS.md.
 - **Audit package DONE:** `foundry/AUDIT_PACKAGE.md` in the code repo (PR #36 merged). The independent audit itself is for the user to arrange.
 - **Vercel env vars checked:** the old address vars are already gone; the remaining `VITE_*` ones are all still read by the app (`VITE_CIRCLE_CLIENT_KEY` is unused and harmless).
 - **Explorer source verification DONE:** all 4 V2 contracts (mainnet + testnet, USDC + EURC) show exact match (details in CONTRACTS.md).
-- **Still open:** independent audit; optional highlight of @mentions inside statement/resolution boxes; `POST /api/escrow` is still unauthenticated (buyer wallet comes from the body).
+- **PR #37 (live):** `POST /api/escrow` now needs a sign-in and the buyer is the token's address (was public, buyer taken from the body). Live check: anonymous create, list and health all as expected (401 / 401 / ok). User still to test creating a deal on the live site.
+- **Still open:** independent audit; optional highlight of @mentions inside statement/resolution boxes.
 
 ## Session summary 2026-09-26: what is live now, and what is still open
 
