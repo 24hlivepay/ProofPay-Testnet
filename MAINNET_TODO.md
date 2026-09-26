@@ -31,6 +31,38 @@ Do not edit `foundry/src/ProofPayEscrow.sol` in place: it must match what is
 deployed and verified. Related: `foundry/test/ProofPayEscrow.t.sol` has
 `testBuyerCanRefundBeforeDelivery`, which would go with a new contract.
 
+## ProofPayEscrowV2 written (draft PR #20, NOT deployed), 2026-09-26
+
+Where `refund()` came from (checked all repos/backups): it is in the original
+testnet prototype (commit eb7add6, 2026-07-26, "save current prototype"),
+documented in docs/TESTING.md as "pre-delivery refund" and covered by a test,
+never offered by the UI, and not in the README flow. No file records the user
+asking for it; the user's rule from the start was that neither buyer nor seller
+can refund themselves after depositing. The 2026-09-16 self-review missed it.
+
+V2 (`foundry/src/ProofPayEscrowV2.sol`, branch `feat/escrow-v2-no-self-refund`,
+draft PR #20) = v1 with `refund()` + `FundsRefunded` removed and a two-step
+`transferOwnership`/`acceptOwnership` (fixes the immutable-owner HIGH finding).
+Status numbers unchanged. v1 file NOT edited (must match deployed). 57 forge
+tests pass (37 new); a control run showed the same refund call succeeds on v1.
+README documents the rule ("nobody refunds themselves").
+
+Rule enforced: after deposit, funds leave only via buyer `releaseFunds` after
+seller `confirmDelivery`, or admin `resolveDispute` after `openDispute`.
+
+**Not done / next, all user decisions:**
+1. Deploy V2 (needs the owner wallet to sign; Claude never signs): testnet
+   first, full flow test, then mainnet; verify on explorer; update contract
+   addresses in env/config (backend + frontend) so NEW escrows use V2. Escrows
+   already funded on v1 finish on v1.
+2. Independent audit of V2 before real funds (diff to v1 is small).
+3. Decide where the new owner points (multisig?) and do the handover.
+4. Blacklist MEDIUM (resolveDispute reverts for both if either address is
+   blacklisted) is NOT fixed in V2, on purpose.
+5. Hardhat copy `contracts/ProofPayEscrow.sol` is now out of date, untouched.
+6. Until V2 is live, a MetaMask/Rabby buyer can still call v1 `refund()`
+   directly while status is Funded (see the PR #19 section above).
+
 ## PR 2 (auth infrastructure) opened, 2026-09-22
 
 Arc Studio's plan was reviewed (6 corrections: legacy connect shape must keep
