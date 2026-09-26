@@ -9,6 +9,15 @@ published — see below. Everything after step 1 still needs doing.
 > `0x7117B300A01C969082DE898F1B1f699F6e8188B3`. PR #21 wires them into the app
 > (testnet only) and adds an admin Pause/Resume "Contracts" tab; open, not merged.**
 
+## Mainnet V2 deployed, 2026-09-26 (evening)
+
+The owner ran `DeployV2Escrows.s.sol` on Arc mainnet: USDC `0xbA8cf9bE18DE912dC98a6422906b1D8F0e56F76B`,
+EURC `0x7894E539a16b0D1aE272BE4ebF998353C6E15C86` (block 22880209, ~0.0997 USDC gas). Checked on chain
+(read only): expected code, owner = deployer, right tokens, not paused, no `refund()`. **PR #31** (open) points
+the app's mainnet config at them and drops the v1 mainnet escrows and the `VITE_MAINNET_*_ESCROW_ADDRESS`
+overrides. After #31 is merged: the owner runs `PauseV1Escrows.s.sol` on mainnet. Still NOT done: independent
+audit of V2, explorer source verification. See CONTRACTS.md.
+
 ## Session summary 2026-09-26: what is live now, and what is still open
 
 **Live on proofpay.online (all merged, deployed, checked on the live site):**
