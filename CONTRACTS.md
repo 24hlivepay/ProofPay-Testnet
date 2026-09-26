@@ -150,9 +150,9 @@ the deploy script; 20 older). A control run showed the same refund call succeeds
 ## What is live today (2026-09-26)
 
 - App on mainnet: **V2 USDC and V2 EURC** (PR #31). The v1 mainnet escrows are retired and paused and held 0 tokens.
-- App on testnet: still v1 USDC, EURC and cirBTC until PR #21 is merged.
-- V2 exists on testnet only. PR #21 wires it in (testnet only) and drops cirBTC
-  from testnet (its v1 escrow is retired, there is no V2 cirBTC escrow).
+- App on testnet: **V2 USDC and V2 EURC** (PR #21 merged). cirBTC is no longer offered on testnet
+  (its v1 escrow is retired, there is no V2 cirBTC escrow).
+- V2 exists on both networks (2 contracts each), all four verified on the explorers (exact match).
 
 ## Retiring the v1 contracts
 
