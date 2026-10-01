@@ -9,6 +9,14 @@ published — see below. Everything after step 1 still needs doing.
 > `0x7117B300A01C969082DE898F1B1f699F6e8188B3`. PR #21 wires them into the app
 > (testnet only) and adds an admin Pause/Resume "Contracts" tab; open, not merged.**
 
+## Swap "No route available" retry, 2026-10-01 (PR #70)
+
+A testnet swap (10 EURC -> USDC) quoted fine and then failed with "Stablecoin Service createSwap failed ... No route
+available". Not from the new layout: calling Circle's swap service directly with the same request fails now and then
+and succeeds on the next call (seen on Arc Testnet, both directions). `withRouteRetry` in `Swap.jsx` repeats the quote
+and the swap call up to three times on that error only (safe: the SDK asks the service for the route before the wallet
+signs anything), and a plain-words message shows if it still fails. Browser-wallet path only.
+
 ## Swap and Bridge as one window, 2026-10-01 (PR #68 e5b5537, PR #69 70a81f4)
 
 PR #68 removed the colored chain/token circles from the Bridge form (owner found them cluttered). PR #69: both pages
