@@ -9,6 +9,15 @@ published — see below. Everything after step 1 still needs doing.
 > `0x7117B300A01C969082DE898F1B1f699F6e8188B3`. PR #21 wires them into the app
 > (testnet only) and adds an admin Pause/Resume "Contracts" tab; open, not merged.**
 
+## Bridge: EURC added and mainnet switched on, 2026-10-01 (PR #65 merged, 0ac048c)
+
+The user confirmed a real wallet-signed USDC bridge on Arc Testnet, then asked for EURC and for mainnet to go live.
+`BRIDGE_MAINNET_ENABLED = true` (still in `Bridge.jsx` as an off switch). EURC routes through CCTPx, so only
+Ethereum, Base, Avalanche (and Ethereum Sepolia, Base Sepolia, Avalanche Fuji); its fee is quoted in the source
+chain's gas token and paid on top (USDC's forwarder fee is taken from the amount that arrives). Estimates checked on
+all EURC routes, both networks. **Not yet tested with a real wallet:** an EURC bridge, and any bridge from another
+chain into Arc (wallet has to switch chains). User will test on the live site with small amounts.
+
 ## Bridge for browser wallets, 2026-10-01 (PR #64 merged, deploy 00ca56f)
 
 New `/#/bridge` page (frontend only, App Kit SDK CCTP bridge, no new dependency, backend untouched). USDC only,
