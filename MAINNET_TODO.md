@@ -9,6 +9,16 @@ published — see below. Everything after step 1 still needs doing.
 > `0x7117B300A01C969082DE898F1B1f699F6e8188B3`. PR #21 wires them into the app
 > (testnet only) and adds an admin Pause/Resume "Contracts" tab; open, not merged.**
 
+## Swap and Bridge as one window, 2026-10-01 (PR #68 e5b5537, PR #69 70a81f4)
+
+PR #68 removed the colored chain/token circles from the Bridge form (owner found them cluttered). PR #69: both pages
+open with a shared `Swap | Bridge` switch (`components/SwapBridgeTabs.jsx`), Swap was restyled to the Bridge layout
+(You pay / You receive panels, summary box via shared `components/DetailRow.jsx`, self-explaining button) and got the
+same in-flight guard as Bridge; the dashboard's Swap / Bridge tab now has one "Swap & Bridge" card. Swap's quoting
+and execution are unchanged. Checked in local preview; a real wallet-signed swap on the new layout is not tested yet.
+Bridge fees worth knowing: Arc -> Ethereum costs about 1.5 USDC (USDC) or 1.9 USDC (EURC) on mainnet because Circle's
+relayer pays Ethereum gas; Base and Avalanche cost a few cents. A high-fee warning was offered, not built.
+
 ## Bridge double-run bug fixed, 2026-10-01 (PR #67 merged, 8316a4f)
 
 The user's testnet tests (wallet 0x4085...f044) show EURC bridging works in both directions: Arc Testnet -> Base
