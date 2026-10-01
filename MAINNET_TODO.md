@@ -9,6 +9,16 @@ published — see below. Everything after step 1 still needs doing.
 > `0x7117B300A01C969082DE898F1B1f699F6e8188B3`. PR #21 wires them into the app
 > (testnet only) and adds an admin Pause/Resume "Contracts" tab; open, not merged.**
 
+## Bridge "amount typed = amount that arrives", testnet first, 2026-10-01 (PR #72, c65ae13)
+
+The owner bridged 10 USDC Arc -> Optimism on mainnet and got 9.95 (Circle's relay fee comes out of what arrives). He
+wants the typed amount to arrive and the fee on top. Now: USDC into Arc uses the SDK's `config.feePayment: "source"`;
+USDC out of Arc cannot (SDK: "not supported from Arc"), so the page adds the flat relay fee to what it sends (type 10,
+send 10.051, 10 arrives), re-quoting at send time; EURC already paid its fee on top. Summary shows "Total from your
+wallet"; Max leaves room for the fee. **On for testnet only**: `RECEIVE_EXACT_MAINNET_ENABLED = false` in `Bridge.jsx`
+keeps mainnet on the default (fee deducted) until the owner confirms a real testnet bridge both ways. Live quotes
+checked: 10 typed -> 10.000000 received on Arc -> Optimism/Base/Ethereum and Optimism/Base -> Arc.
+
 ## First real mainnet swap on the new layout + stale balance fix, 2026-10-01 (PR #71)
 
 The owner swapped cirBTC for EURC on Arc Mainnet from wallet 0x4085...f044. It worked on chain (wallet read directly:
