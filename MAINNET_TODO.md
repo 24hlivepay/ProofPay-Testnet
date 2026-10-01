@@ -9,6 +9,15 @@ published — see below. Everything after step 1 still needs doing.
 > `0x7117B300A01C969082DE898F1B1f699F6e8188B3`. PR #21 wires them into the app
 > (testnet only) and adds an admin Pause/Resume "Contracts" tab; open, not merged.**
 
+## Bridge double-run bug fixed, 2026-10-01 (PR #67 merged, 8316a4f)
+
+The user's testnet tests (wallet 0x4085...f044) show EURC bridging works in both directions: Arc Testnet -> Base
+Sepolia and Avalanche Fuji, and back into Arc Testnet (wallet chain switching works). One run on the new form sent
+two approves and two `crossChainTransfer`s a second apart; the first succeeded (4 EURC arrived on Base Sepolia), the
+second reverted with "transfer amount exceeds allowance" and its error replaced the success on screen ("Nothing was
+sent"). Fix: `runBridge` refuses to start while one is in flight (ref guard), and a stopped bridge now names the step
+and shows the SDK's reason. Checked locally: three fast clicks send one wallet request.
+
 ## Bridge form redesigned, 2026-10-01 (PR #66 merged, e38f73d)
 
 Layout only, no change to quoting or execution: From / To panels with chain mark, large amount and token badge,
