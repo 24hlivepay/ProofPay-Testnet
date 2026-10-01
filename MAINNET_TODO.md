@@ -9,6 +9,13 @@ published — see below. Everything after step 1 still needs doing.
 > `0x7117B300A01C969082DE898F1B1f699F6e8188B3`. PR #21 wires them into the app
 > (testnet only) and adds an admin Pause/Resume "Contracts" tab; open, not merged.**
 
+## Bridge form redesigned, 2026-10-01 (PR #66 merged, e38f73d)
+
+Layout only, no change to quoting or execution: From / To panels with chain mark, large amount and token badge,
+round reverse button, USDC / EURC switch in the header, one fee summary box. The main button now states why it is
+disabled ("Not enough EURC on Base") instead of a silent grey button. Checked in local preview (both tokens, both
+directions, phone width).
+
 ## Bridge: EURC added and mainnet switched on, 2026-10-01 (PR #65 merged, 0ac048c)
 
 The user confirmed a real wallet-signed USDC bridge on Arc Testnet, then asked for EURC and for mainnet to go live.
