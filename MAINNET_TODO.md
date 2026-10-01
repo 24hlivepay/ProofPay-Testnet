@@ -9,6 +9,13 @@ published — see below. Everything after step 1 still needs doing.
 > `0x7117B300A01C969082DE898F1B1f699F6e8188B3`. PR #21 wires them into the app
 > (testnet only) and adds an admin Pause/Resume "Contracts" tab; open, not merged.**
 
+## Success screen after a swap or bridge, 2026-10-01 (PR #73)
+
+A finished swap/bridge now replaces the form with `components/SuccessPanel.jsx` (large check, "Bridge complete" /
+"Swap complete", sent and received amounts, one explorer link per transaction, "Bridge again" / "Swap again"), in the
+style of Jumper and Uniswap, instead of one green line. Display only. Panel checked on its own in local preview; not
+yet seen after a real wallet-signed transaction.
+
 ## Bridge "amount typed = amount that arrives", testnet first, 2026-10-01 (PR #72, c65ae13)
 
 The owner bridged 10 USDC Arc -> Optimism on mainnet and got 9.95 (Circle's relay fee comes out of what arrives). He
