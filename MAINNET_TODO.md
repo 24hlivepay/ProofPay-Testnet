@@ -9,6 +9,13 @@ published — see below. Everything after step 1 still needs doing.
 > `0x7117B300A01C969082DE898F1B1f699F6e8188B3`. PR #21 wires them into the app
 > (testnet only) and adds an admin Pause/Resume "Contracts" tab; open, not merged.**
 
+## First real mainnet swap on the new layout + stale balance fix, 2026-10-01 (PR #71)
+
+The owner swapped cirBTC for EURC on Arc Mainnet from wallet 0x4085...f044. It worked on chain (wallet read directly:
+9.673473 EURC, 0 cirBTC) but the page kept the old balances, because `kit.swap` returns when the transaction is sent,
+not when it is in a block, and balances were read only once. Swap and Bridge now re-read balances a few times over the
+next seconds and clear the amount when done; cirBTC balances show 8 decimals (4 showed 0.00013042 as 0.0001).
+
 ## Swap "No route available" retry, 2026-10-01 (PR #70)
 
 A testnet swap (10 EURC -> USDC) quoted fine and then failed with "Stablecoin Service createSwap failed ... No route
