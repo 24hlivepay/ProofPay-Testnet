@@ -9,6 +9,17 @@ published — see below. Everything after step 1 still needs doing.
 > `0x7117B300A01C969082DE898F1B1f699F6e8188B3`. PR #21 wires them into the app
 > (testnet only) and adds an admin Pause/Resume "Contracts" tab; open, not merged.**
 
+## Bridge for browser wallets, 2026-10-01 (PR #64 merged, deploy 00ca56f)
+
+New `/#/bridge` page (frontend only, App Kit SDK CCTP bridge, no new dependency, backend untouched). USDC only,
+Arc <-> Ethereum, Base, Arbitrum, Optimism, Polygon, Avalanche (and their testnets), both directions. Destination
+uses Circle's forwarder, so the wallet signs only on the source chain and needs no destination gas. EOA wallets only;
+Circle (email) wallets see a note. Dashboard tabs are now Wallet (My Wallet, Onramp), Swap / Bridge, Escrows.
+`kit.estimateBridge()` was checked for all 12 routes on both networks. **A real wallet-signed bridge has NOT been
+tested yet**, so `BRIDGE_MAINNET_ENABLED = false` in `frontend/src/pages/Bridge.jsx` keeps mainnet off (shows a note).
+Next: user tests on the live site in Arc Testnet mode (e.g. 1 USDC Arc Testnet -> Base Sepolia); if it works, flip the
+flag. Not built: bridge for Circle (email) wallets; onramp webhook (still open).
+
 ## Tested by the user 2026-09-26 (late): mainnet end to end up to a dispute
 
 The user ran the flow on Arc mainnet with the V2 contracts and the live app (deal, deposit, delivery, dispute with
