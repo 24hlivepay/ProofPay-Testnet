@@ -9,6 +9,19 @@ published — see below. Everything after step 1 still needs doing.
 > `0x7117B300A01C969082DE898F1B1f699F6e8188B3`. PR #21 wires them into the app
 > (testnet only) and adds an admin Pause/Resume "Contracts" tab; open, not merged.**
 
+## Docs section, 2026-10-03 (PR #118)
+
+Public docs at `/#/docs` (15 topics), a Docs tab in the top nav and a
+"Read the Docs" button on the landing page. The text is in
+`frontend/src/docs/content.js`; contract addresses come from
+`config/escrowAssets.js`.
+
+- When behaviour changes (fees, routes, limits, a new feature), update the
+  matching topic in `content.js` in the same PR, and `DOCS_UPDATED`.
+- Also this day: admin wallet sees an Admin tab instead of Escrows (PR #116);
+  bridge history matches the IRIS message to the bridge's chain and wallet
+  before linking the delivery (PR #117).
+
 ## Onramp purchase records, 2026-10-03 (PR #115)
 
 The Buy USDC / EURC page now saves what Circle's widget reports (opened,
