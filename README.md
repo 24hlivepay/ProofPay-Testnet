@@ -2,7 +2,7 @@
 
 Secure peer-to-peer USDC escrow on Arc Testnet.
 
-[Live app](https://proofpay.online) · [Demo video](https://youtu.be/O791txQRc5E) · [Smart contract](https://testnet.arcscan.app/address/0xCd0f43E573899809ff96C560439570A760698C9a) · [Deployment transaction](https://testnet.arcscan.app/tx/0x79e8933c8df6707c0f5a91fc3f0e162f270100eb4514994d6d8536901dfe3f73)
+[Live app](https://proofpay.online) · [Smart contract](https://testnet.arcscan.app/address/0xCd0f43E573899809ff96C560439570A760698C9a) · [Deployment transaction](https://testnet.arcscan.app/tx/0x79e8933c8df6707c0f5a91fc3f0e162f270100eb4514994d6d8536901dfe3f73)
 
 > ProofPay is currently a public testnet MVP. It does not handle real funds and has not been audited.
 
