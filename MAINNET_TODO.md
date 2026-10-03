@@ -9,6 +9,18 @@ published — see below. Everything after step 1 still needs doing.
 > `0x7117B300A01C969082DE898F1B1f699F6e8188B3`. PR #21 wires them into the app
 > (testnet only) and adds an admin Pause/Resume "Contracts" tab; open, not merged.**
 
+## Onramp purchase records, 2026-10-03 (PR #115)
+
+The Buy USDC / EURC page now saves what Circle's widget reports (opened,
+payment submitted, settled, not completed) in `proofpay_records`
+(type `onramp_purchase`). The user sees their own list under "Your purchases"
+on the Buy page; admin sees all wallets under Admin > Onramp.
+
+- These rows come from the browser, so a user who closes the tab after paying
+  stays at "Payment submitted". Circle webhooks are still needed to confirm.
+- Nothing before this date was recorded.
+- Not yet tried with a real purchase.
+
 ## Success screen after a swap or bridge, 2026-10-01 (PR #73)
 
 A finished swap/bridge now replaces the form with `components/SuccessPanel.jsx` (large check, "Bridge complete" /
